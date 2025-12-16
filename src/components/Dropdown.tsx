@@ -122,6 +122,105 @@ export function Dropdown({
   );
 }
 
+// Grid dropdown for many options (e.g., transitions) - 2 columns with scroll
+interface GridDropdownProps {
+  options: { id: string; label: string; description?: string }[];
+  value: string;
+  onChange: (value: string) => void;
+  isOpen: boolean;
+  onClose: () => void;
+  triggerRef: React.RefObject<HTMLButtonElement | null>;
+}
+
+export function GridDropdown({
+  options,
+  value,
+  onChange,
+  isOpen,
+  onClose,
+  triggerRef,
+}: GridDropdownProps) {
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState({ top: 0, left: 0 });
+
+  useEffect(() => {
+    if (isOpen && triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const dropdownHeight = Math.min(400, viewportHeight - 100);
+
+      // Position to the right, but ensure it doesn't go off screen
+      let top = rect.top;
+      if (top + dropdownHeight > viewportHeight - 20) {
+        top = viewportHeight - dropdownHeight - 20;
+      }
+
+      setPosition({
+        top: Math.max(20, top),
+        left: rect.right + 8,
+      });
+    }
+  }, [isOpen, triggerRef]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node) &&
+        triggerRef.current &&
+        !triggerRef.current.contains(event.target as Node)
+      ) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen, onClose, triggerRef]);
+
+  if (!isOpen) return null;
+
+  return createPortal(
+    <div
+      ref={dropdownRef}
+      style={{ top: position.top, left: position.left }}
+      className="fixed z-[9999] w-80 rounded-2xl border border-zinc-700 bg-zinc-800 p-2 shadow-xl"
+    >
+      <div className="hide-scrollbar max-h-[360px] overflow-y-auto">
+        <div className="grid grid-cols-2 gap-1">
+          {options.map((option) => (
+            <button
+              key={option.id}
+              onClick={() => {
+                onChange(option.id);
+                onClose();
+              }}
+              className={`flex w-full flex-col items-start rounded-lg px-2.5 py-2 text-left transition-colors outline-none hover:bg-white/5 ${
+                value === option.id ? "bg-white/10 ring-1 ring-cyan-400/50" : ""
+              }`}
+            >
+              <span className="text-xs font-medium text-white capitalize">
+                {option.label}
+              </span>
+              {option.description && (
+                <span className="line-clamp-1 text-[10px] text-gray-500">
+                  {option.description}
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
+}
+
 // Simple dropdown for options without icons (duration, aspect ratio, resolution)
 interface SimpleDropdownProps {
   options: { id: string; label: string }[];

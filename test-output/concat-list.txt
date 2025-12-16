@@ -1,0 +1,4 @@
+file '/Users/kenkai/Documents/UnstableMind/content-cat/test-output/clip-1.mp4'
+file '/Users/kenkai/Documents/UnstableMind/content-cat/test-output/clip-2.mp4'
+file '/Users/kenkai/Documents/UnstableMind/content-cat/test-output/clip-3.mp4'
+file '/Users/kenkai/Documents/UnstableMind/content-cat/test-output/clip-4.mp4'

@@ -14,7 +14,34 @@ import {
   type VideoDuration,
   type VideoResolution,
 } from "@/lib/kie";
-import { Dropdown, SimpleDropdown } from "@/components/Dropdown";
+import { Dropdown, SimpleDropdown, GridDropdown } from "@/components/Dropdown";
+
+// Import video editor presets (client-safe, no Node.js dependencies)
+import { TRANSITION_DEFINITIONS } from "@/lib/video-editor/transitions";
+import {
+  TITLE_PRESETS,
+  HOOK_PRESETS,
+  SUBTITLE_PRESETS as TEXT_SUBTITLE_PRESETS,
+} from "@/lib/video-editor/text/presets";
+
+// Edit Video State Types
+interface EditVideoState {
+  // Transitions
+  transitionType: string;
+  transitionDuration: number;
+  // Text Overlay
+  textEnabled: boolean;
+  textPreset: string;
+  textContent: string;
+  textPosition: string;
+  // Subtitles
+  subtitlesEnabled: boolean;
+  subtitleStyle: string;
+  // Audio
+  audioEnabled: boolean;
+  audioVolume: number;
+  audioDucking: boolean;
+}
 
 // Model Icons
 const KlingIcon = () => (
@@ -147,30 +174,75 @@ const ImagePlaceholderIcon = () => (
   </svg>
 );
 
+// Default edit video state
+const getDefaultEditState = (): EditVideoState => ({
+  transitionType: "fade",
+  transitionDuration: 0.5,
+  textEnabled: false,
+  textPreset: "title-impact",
+  textContent: "",
+  textPosition: "middle-center",
+  subtitlesEnabled: false,
+  subtitleStyle: "subtitle-tiktok",
+  audioEnabled: false,
+  audioVolume: 0.3,
+  audioDucking: true,
+});
+
+// Position options for text
+const TEXT_POSITIONS = [
+  { id: "top-left", label: "Top Left" },
+  { id: "top-center", label: "Top Center" },
+  { id: "top-right", label: "Top Right" },
+  { id: "middle-left", label: "Middle Left" },
+  { id: "middle-center", label: "Middle Center" },
+  { id: "middle-right", label: "Middle Right" },
+  { id: "bottom-left", label: "Bottom Left" },
+  { id: "bottom-center", label: "Bottom Center" },
+  { id: "bottom-right", label: "Bottom Right" },
+];
+
 export default function VideoPage() {
-  const [activeTab, setActiveTab] = useState<"create" | "edit" | "draw">(
-    "create"
-  );
+  const [activeTab, setActiveTab] = useState<"create" | "edit">("create");
   const [showPresetSelector, setShowPresetSelector] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState("General");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Dropdown trigger refs
+  // Dropdown trigger refs - Create mode
   const modelTriggerRef = useRef<HTMLButtonElement>(null);
   const durationTriggerRef = useRef<HTMLButtonElement>(null);
   const aspectTriggerRef = useRef<HTMLButtonElement>(null);
   const resolutionTriggerRef = useRef<HTMLButtonElement>(null);
 
-  // Video generation state
+  // Dropdown trigger refs - Edit mode
+  const transitionTriggerRef = useRef<HTMLButtonElement>(null);
+  const textPresetTriggerRef = useRef<HTMLButtonElement>(null);
+  const textPositionTriggerRef = useRef<HTMLButtonElement>(null);
+  const subtitleStyleTriggerRef = useRef<HTMLButtonElement>(null);
+
+  // Video generation state (Create mode)
   const [videoState, setVideoState] = useState<VideoGenerationState>(
     getDefaultState("kling-2.6")
   );
 
-  // Dropdown visibility states
+  // Edit video state
+  const [editState, setEditState] = useState<EditVideoState>(
+    getDefaultEditState()
+  );
+
+  // Dropdown visibility states - Create mode
   const [showModelDropdown, setShowModelDropdown] = useState(false);
   const [showDurationDropdown, setShowDurationDropdown] = useState(false);
   const [showAspectDropdown, setShowAspectDropdown] = useState(false);
   const [showResolutionDropdown, setShowResolutionDropdown] = useState(false);
+
+  // Dropdown visibility states - Edit mode
+  const [showTransitionDropdown, setShowTransitionDropdown] = useState(false);
+  const [showTextPresetDropdown, setShowTextPresetDropdown] = useState(false);
+  const [showTextPositionDropdown, setShowTextPositionDropdown] =
+    useState(false);
+  const [showSubtitleStyleDropdown, setShowSubtitleStyleDropdown] =
+    useState(false);
 
   // Get current model config
   const modelConfig = getModelConfig(videoState.model);
@@ -214,6 +286,41 @@ export default function VideoPage() {
     }
   };
 
+  // Edit state update handler
+  const updateEditState = (updates: Partial<EditVideoState>) => {
+    setEditState((prev) => ({ ...prev, ...updates }));
+  };
+
+  // Get all text presets for dropdown
+  const getAllTextPresets = () => {
+    return [
+      ...Object.entries(TITLE_PRESETS).map(([id, preset]) => ({
+        id,
+        label: preset.name,
+        category: "Titles",
+      })),
+      ...Object.entries(HOOK_PRESETS).map(([id, preset]) => ({
+        id,
+        label: preset.name,
+        category: "Hooks",
+      })),
+      ...Object.entries(TEXT_SUBTITLE_PRESETS).map(([id, preset]) => ({
+        id,
+        label: preset.name,
+        category: "Subtitles",
+      })),
+    ];
+  };
+
+  // Get transition options
+  const getTransitionOptions = () => {
+    return Object.entries(TRANSITION_DEFINITIONS).map(([name, def]) => ({
+      id: name,
+      label: def.name,
+      description: def.description,
+    }));
+  };
+
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-[#0a0a0a]">
       <Header />
@@ -242,306 +349,700 @@ export default function VideoPage() {
             >
               Edit Video
             </button>
-            <button
-              onClick={() => setActiveTab("draw")}
-              className={`-mb-3 border-b-2 pb-2 text-sm font-medium whitespace-nowrap transition-colors ${
-                activeTab === "draw"
-                  ? "border-white text-white"
-                  : "border-transparent text-gray-500 hover:text-gray-300"
-              }`}
-            >
-              Draw to Video
-            </button>
           </nav>
 
           {/* Scrollable Content */}
           <div className="hide-scrollbar flex-1 space-y-2 overflow-y-auto px-4 py-4">
-            {/* Preset Card */}
-            <figure
-              className="group relative aspect-[2.3] w-full cursor-pointer overflow-hidden rounded-xl select-none"
-              onClick={() => setShowPresetSelector(true)}
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-teal-900 via-teal-800 to-amber-900" />
-              <div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.5) 50%)",
-                }}
-              />
-              <figcaption className="absolute bottom-0 left-0 z-10 w-full pr-1.5 pb-3 pl-3">
-                <p className="font-heading w-full truncate text-lg font-bold text-cyan-400 uppercase">
-                  {selectedPreset}
-                </p>
-                <p className="text-xs text-white/80">{modelConfig.name}</p>
-              </figcaption>
-              <button
-                className="absolute top-1.5 right-1.5 z-20 flex h-6 items-center gap-1 rounded-lg border border-white/10 bg-black/60 px-2 text-xs text-white backdrop-blur-sm transition-colors hover:bg-cyan-400 hover:text-black"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowPresetSelector(true);
-                }}
-              >
-                <EditIcon />
-                Change
-              </button>
-            </figure>
-
-            {/* Upload Image Section */}
-            <div
-              className="relative w-full rounded-2xl border border-dashed border-zinc-700 select-none"
-              style={{ height: "120px" }}
-            >
-              <div className="pointer-events-none absolute top-2 right-2 rounded-3xl bg-white/5 px-2 py-1.5 text-xs text-gray-500 ring ring-gray-500/5 backdrop-blur-sm ring-inset">
-                Optional
-              </div>
-              <label className="flex size-full cursor-pointer flex-col items-center justify-center">
-                <input
-                  accept="image/jpeg, image/jpg, image/png, image/webp"
-                  className="sr-only"
-                  type="file"
-                />
-                <div className="flex size-9 items-center justify-center rounded-lg bg-zinc-800 p-1.5 shadow-[0_-1.872px_0_0_rgba(20,1,8,0.30)_inset,0_3.744px_3.744px_0_rgba(0,0,0,0.25)]">
-                  <ImageUploadIcon />
-                </div>
-                <div className="mt-2 text-center text-xs text-white/60">
-                  <p className="mb-0.5">
-                    Upload image or{" "}
-                    <span className="px-1 font-semibold text-white">
-                      generate it
-                    </span>
-                  </p>
-                  <p className="text-white/50">
-                    PNG, JPG or Paste from clipboard
-                  </p>
-                </div>
-              </label>
-            </div>
-
-            {/* Prompt Section */}
-            <fieldset className="rounded-xl bg-zinc-800/50">
-              <label className="relative block p-3 pb-1">
-                <span className="mb-1 text-sm font-medium text-gray-500">
-                  Prompt
-                  <span className="ml-2 text-xs text-gray-600">
-                    {videoState.prompt.length}/{modelConfig.maxPromptLength}
-                  </span>
-                </span>
-                <textarea
-                  ref={textareaRef}
-                  value={videoState.prompt}
-                  onChange={(e) => updateVideoState({ prompt: e.target.value })}
-                  onInput={handleTextareaInput}
-                  className="hide-scrollbar w-full resize-none overflow-y-auto border-none bg-transparent text-sm text-white placeholder:text-gray-500 focus:outline-none"
-                  placeholder="Describe the scene you imagine, with details."
-                  style={{ height: "60px", maxHeight: "120px" }}
-                  maxLength={modelConfig.maxPromptLength}
-                />
-              </label>
-              <div className="flex flex-wrap gap-1 p-3 pt-0">
-                {modelConfig.supportsPromptEnhancement && (
-                  <label
-                    className={`flex h-6 w-fit cursor-pointer items-center justify-center gap-1 rounded-md border border-transparent px-2 py-1 whitespace-nowrap transition-colors select-none ${
-                      videoState.enhanceEnabled
-                        ? "text-white"
-                        : "text-white/80 hover:text-white"
-                    }`}
-                    onClick={() =>
-                      updateVideoState({
-                        enhanceEnabled: !videoState.enhanceEnabled,
-                      })
-                    }
+            {activeTab === "create" ? (
+              <>
+                {/* Preset Card */}
+                <figure
+                  className="group relative aspect-[2.3] w-full cursor-pointer overflow-hidden rounded-xl select-none"
+                  onClick={() => setShowPresetSelector(true)}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-teal-900 via-teal-800 to-amber-900" />
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        "linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.5) 50%)",
+                    }}
+                  />
+                  <figcaption className="absolute bottom-0 left-0 z-10 w-full pr-1.5 pb-3 pl-3">
+                    <p className="font-heading w-full truncate text-lg font-bold text-cyan-400 uppercase">
+                      {selectedPreset}
+                    </p>
+                    <p className="text-xs text-white/80">{modelConfig.name}</p>
+                  </figcaption>
+                  <button
+                    className="absolute top-1.5 right-1.5 z-20 flex h-6 items-center gap-1 rounded-lg border border-white/10 bg-black/60 px-2 text-xs text-white backdrop-blur-sm transition-colors hover:bg-cyan-400 hover:text-black"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowPresetSelector(true);
+                    }}
                   >
-                    <EnhanceIcon />
-                    <span className="text-xs font-medium">
-                      Enhance {videoState.enhanceEnabled ? "on" : "off"}
-                    </span>
-                  </label>
-                )}
-              </div>
-            </fieldset>
+                    <EditIcon />
+                    Change
+                  </button>
+                </figure>
 
-            {/* Audio Toggle - Only show if model supports audio */}
-            {modelConfig.supportsAudio && (
-              <fieldset>
-                <div className="rounded-xl bg-zinc-800/50 p-3">
-                  <div className="flex flex-row items-center justify-between gap-1.5">
-                    <div className="flex shrink-0 items-center gap-1 text-sm text-white">
-                      <span className="font-medium">Audio</span>
-                      <button className="text-gray-500">
-                        <InfoIcon />
-                      </button>
+                {/* Upload Image Section */}
+                <div
+                  className="relative w-full rounded-2xl border border-dashed border-zinc-700 select-none"
+                  style={{ height: "120px" }}
+                >
+                  <div className="pointer-events-none absolute top-2 right-2 rounded-3xl bg-white/5 px-2 py-1.5 text-xs text-gray-500 ring ring-gray-500/5 backdrop-blur-sm ring-inset">
+                    Optional
+                  </div>
+                  <label className="flex size-full cursor-pointer flex-col items-center justify-center">
+                    <input
+                      accept="image/jpeg, image/jpg, image/png, image/webp"
+                      className="sr-only"
+                      type="file"
+                    />
+                    <div className="flex size-9 items-center justify-center rounded-lg bg-zinc-800 p-1.5 shadow-[0_-1.872px_0_0_rgba(20,1,8,0.30)_inset,0_3.744px_3.744px_0_rgba(0,0,0,0.25)]">
+                      <ImageUploadIcon />
                     </div>
+                    <div className="mt-2 text-center text-xs text-white/60">
+                      <p className="mb-0.5">
+                        Upload image or{" "}
+                        <span className="px-1 font-semibold text-white">
+                          generate it
+                        </span>
+                      </p>
+                      <p className="text-white/50">
+                        PNG, JPG or Paste from clipboard
+                      </p>
+                    </div>
+                  </label>
+                </div>
+
+                {/* Prompt Section */}
+                <fieldset className="rounded-xl bg-zinc-800/50">
+                  <label className="relative block p-3 pb-1">
+                    <span className="mb-1 text-sm font-medium text-gray-500">
+                      Prompt
+                      <span className="ml-2 text-xs text-gray-600">
+                        {videoState.prompt.length}/{modelConfig.maxPromptLength}
+                      </span>
+                    </span>
+                    <textarea
+                      ref={textareaRef}
+                      value={videoState.prompt}
+                      onChange={(e) =>
+                        updateVideoState({ prompt: e.target.value })
+                      }
+                      onInput={handleTextareaInput}
+                      className="hide-scrollbar w-full resize-none overflow-y-auto border-none bg-transparent text-sm text-white placeholder:text-gray-500 focus:outline-none"
+                      placeholder="Describe the scene you imagine, with details."
+                      style={{ height: "60px", maxHeight: "120px" }}
+                      maxLength={modelConfig.maxPromptLength}
+                    />
+                  </label>
+                  <div className="flex flex-wrap gap-1 p-3 pt-0">
+                    {modelConfig.supportsPromptEnhancement && (
+                      <label
+                        className={`flex h-6 w-fit cursor-pointer items-center justify-center gap-1 rounded-md border border-transparent px-2 py-1 whitespace-nowrap transition-colors select-none ${
+                          videoState.enhanceEnabled
+                            ? "text-white"
+                            : "text-white/80 hover:text-white"
+                        }`}
+                        onClick={() =>
+                          updateVideoState({
+                            enhanceEnabled: !videoState.enhanceEnabled,
+                          })
+                        }
+                      >
+                        <EnhanceIcon />
+                        <span className="text-xs font-medium">
+                          Enhance {videoState.enhanceEnabled ? "on" : "off"}
+                        </span>
+                      </label>
+                    )}
+                  </div>
+                </fieldset>
+
+                {/* Audio Toggle - Only show if model supports audio */}
+                {modelConfig.supportsAudio && (
+                  <fieldset>
+                    <div className="rounded-xl bg-zinc-800/50 p-3">
+                      <div className="flex flex-row items-center justify-between gap-1.5">
+                        <div className="flex shrink-0 items-center gap-1 text-sm text-white">
+                          <span className="font-medium">Audio</span>
+                          <button className="text-gray-500">
+                            <InfoIcon />
+                          </button>
+                        </div>
+                        <button
+                          onClick={() =>
+                            updateVideoState({
+                              audioEnabled: !videoState.audioEnabled,
+                            })
+                          }
+                          className={`relative inline-flex h-6 w-9 shrink-0 cursor-pointer items-center rounded-full transition ${
+                            videoState.audioEnabled
+                              ? "bg-cyan-400"
+                              : "bg-zinc-700"
+                          }`}
+                        >
+                          <span
+                            className={`pointer-events-none absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 transform rounded-full bg-white shadow-lg transition-transform duration-300 ease-in-out ${
+                              videoState.audioEnabled
+                                ? "translate-x-4"
+                                : "translate-x-0"
+                            }`}
+                          />
+                        </button>
+                      </div>
+                    </div>
+                  </fieldset>
+                )}
+
+                {/* Model Selection */}
+                <fieldset className="relative">
+                  <button
+                    ref={modelTriggerRef}
+                    onClick={() => setShowModelDropdown(!showModelDropdown)}
+                    className="grid w-full grid-cols-[1fr_auto] items-center gap-2 rounded-xl bg-zinc-800/50 px-3 py-2.5 text-left transition hover:bg-zinc-700/50"
+                  >
+                    <div className="grid">
+                      <span className="text-xs font-medium whitespace-nowrap text-gray-500">
+                        Model
+                      </span>
+                      <div className="text-sm font-medium text-white">
+                        {modelConfig.name}
+                      </div>
+                    </div>
+                    <ChevronDownIcon />
+                  </button>
+                  <Dropdown
+                    isOpen={showModelDropdown}
+                    onClose={() => setShowModelDropdown(false)}
+                    value={videoState.model}
+                    onChange={(id) => handleModelChange(id as VideoModelId)}
+                    triggerRef={modelTriggerRef}
+                    options={Object.values(VIDEO_MODELS).map((model) => ({
+                      id: model.id,
+                      label: model.shortName,
+                      description: model.description,
+                      icon: MODEL_ICONS[model.id],
+                    }))}
+                  />
+                </fieldset>
+
+                {/* Duration & Aspect Ratio */}
+                <fieldset>
+                  <div className="flex w-full items-center gap-2">
+                    {/* Duration Dropdown */}
+                    <div className="relative flex-1">
+                      <button
+                        ref={durationTriggerRef}
+                        onClick={() =>
+                          setShowDurationDropdown(!showDurationDropdown)
+                        }
+                        className="grid w-full grid-cols-[1fr_auto] items-center gap-2 rounded-xl bg-zinc-800/50 px-3 py-2.5 text-left transition hover:bg-zinc-700/50"
+                      >
+                        <div className="grid">
+                          <span className="text-xs font-medium whitespace-nowrap text-gray-500">
+                            Duration
+                          </span>
+                          <div className="text-sm font-medium text-white">
+                            {videoState.duration}s
+                          </div>
+                        </div>
+                        <ChevronDownIcon />
+                      </button>
+                      <SimpleDropdown
+                        isOpen={showDurationDropdown}
+                        onClose={() => setShowDurationDropdown(false)}
+                        value={videoState.duration}
+                        onChange={(id) =>
+                          handleDurationChange(id as VideoDuration)
+                        }
+                        triggerRef={durationTriggerRef}
+                        options={modelConfig.durations.map((d) => ({
+                          id: d,
+                          label: `${d} seconds`,
+                        }))}
+                      />
+                    </div>
+
+                    {/* Aspect Ratio Dropdown */}
+                    <div className="relative flex-1">
+                      <button
+                        ref={aspectTriggerRef}
+                        onClick={() =>
+                          setShowAspectDropdown(!showAspectDropdown)
+                        }
+                        className="grid w-full grid-cols-[1fr_auto] items-center gap-2 rounded-xl bg-zinc-800/50 px-3 py-2.5 text-left transition hover:bg-zinc-700/50"
+                      >
+                        <div className="grid">
+                          <span className="text-xs font-medium whitespace-nowrap text-gray-500">
+                            Aspect Ratio
+                          </span>
+                          <div className="text-sm font-medium text-white">
+                            {videoState.aspectRatio}
+                          </div>
+                        </div>
+                        <ChevronDownIcon />
+                      </button>
+                      <SimpleDropdown
+                        isOpen={showAspectDropdown}
+                        onClose={() => setShowAspectDropdown(false)}
+                        value={videoState.aspectRatio}
+                        onChange={(id) =>
+                          handleAspectChange(id as VideoAspectRatio)
+                        }
+                        triggerRef={aspectTriggerRef}
+                        options={modelConfig.aspectRatios.map((ar) => ({
+                          id: ar,
+                          label: ar,
+                        }))}
+                      />
+                    </div>
+                  </div>
+                </fieldset>
+
+                {/* Resolution - Only show if model supports multiple resolutions */}
+                {modelConfig.resolutions &&
+                  modelConfig.resolutions.length > 0 && (
+                    <fieldset className="relative">
+                      <button
+                        ref={resolutionTriggerRef}
+                        onClick={() =>
+                          setShowResolutionDropdown(!showResolutionDropdown)
+                        }
+                        className="grid w-full grid-cols-[1fr_auto] items-center gap-2 rounded-xl bg-zinc-800/50 px-3 py-2.5 text-left transition hover:bg-zinc-700/50"
+                      >
+                        <div className="grid">
+                          <span className="text-xs font-medium whitespace-nowrap text-gray-500">
+                            Resolution
+                          </span>
+                          <div className="text-sm font-medium text-white">
+                            {videoState.resolution ||
+                              modelConfig.resolutions[0]}
+                          </div>
+                        </div>
+                        <ChevronDownIcon />
+                      </button>
+                      <SimpleDropdown
+                        isOpen={showResolutionDropdown}
+                        onClose={() => setShowResolutionDropdown(false)}
+                        value={
+                          videoState.resolution || modelConfig.resolutions[0]
+                        }
+                        onChange={(id) =>
+                          handleResolutionChange(id as VideoResolution)
+                        }
+                        triggerRef={resolutionTriggerRef}
+                        options={modelConfig.resolutions.map((res) => ({
+                          id: res,
+                          label: res,
+                        }))}
+                      />
+                    </fieldset>
+                  )}
+              </>
+            ) : (
+              /* ============================================ */
+              /* Edit Video Configuration */
+              /* ============================================ */
+              <>
+                {/* Section: Transitions */}
+                <div className="rounded-xl bg-zinc-800/50 p-3">
+                  <h3 className="mb-3 text-xs font-semibold tracking-wider text-gray-400 uppercase">
+                    Transitions
+                  </h3>
+
+                  {/* Transition Type */}
+                  <div className="relative mb-2">
+                    <button
+                      ref={transitionTriggerRef}
+                      onClick={() =>
+                        setShowTransitionDropdown(!showTransitionDropdown)
+                      }
+                      className="grid w-full grid-cols-[1fr_auto] items-center gap-2 rounded-lg bg-zinc-700/50 px-3 py-2 text-left transition hover:bg-zinc-600/50"
+                    >
+                      <div className="grid">
+                        <span className="text-xs text-gray-500">Type</span>
+                        <div className="text-sm font-medium text-white capitalize">
+                          {editState.transitionType}
+                        </div>
+                      </div>
+                      <ChevronDownIcon />
+                    </button>
+                    <GridDropdown
+                      isOpen={showTransitionDropdown}
+                      onClose={() => setShowTransitionDropdown(false)}
+                      value={editState.transitionType}
+                      onChange={(id) => {
+                        updateEditState({ transitionType: id });
+                        setShowTransitionDropdown(false);
+                      }}
+                      triggerRef={transitionTriggerRef}
+                      options={getTransitionOptions()}
+                    />
+                  </div>
+
+                  {/* Transition Duration */}
+                  <div className="flex items-center justify-between rounded-lg bg-zinc-700/50 px-3 py-2">
+                    <span className="text-xs text-gray-500">Duration</span>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="range"
+                        min="0.1"
+                        max="2"
+                        step="0.1"
+                        value={editState.transitionDuration}
+                        onChange={(e) =>
+                          updateEditState({
+                            transitionDuration: parseFloat(e.target.value),
+                          })
+                        }
+                        className="h-1 w-20 cursor-pointer appearance-none rounded-full bg-zinc-600 accent-cyan-400"
+                      />
+                      <span className="w-10 text-right text-sm text-white">
+                        {editState.transitionDuration}s
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section: Text Overlay */}
+                <div className="rounded-xl bg-zinc-800/50 p-3">
+                  <div className="mb-3 flex items-center justify-between">
+                    <h3 className="text-xs font-semibold tracking-wider text-gray-400 uppercase">
+                      Text Overlay
+                    </h3>
                     <button
                       onClick={() =>
-                        updateVideoState({
-                          audioEnabled: !videoState.audioEnabled,
-                        })
+                        updateEditState({ textEnabled: !editState.textEnabled })
                       }
-                      className={`relative inline-flex h-6 w-9 shrink-0 cursor-pointer items-center rounded-full transition ${
-                        videoState.audioEnabled ? "bg-cyan-400" : "bg-zinc-700"
+                      className={`relative inline-flex h-5 w-8 shrink-0 cursor-pointer items-center rounded-full transition ${
+                        editState.textEnabled ? "bg-cyan-400" : "bg-zinc-700"
                       }`}
                     >
                       <span
-                        className={`pointer-events-none absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 transform rounded-full bg-white shadow-lg transition-transform duration-300 ease-in-out ${
-                          videoState.audioEnabled
-                            ? "translate-x-4"
+                        className={`pointer-events-none absolute top-1/2 left-0.5 h-3.5 w-3.5 -translate-y-1/2 transform rounded-full bg-white shadow-lg transition-transform duration-300 ease-in-out ${
+                          editState.textEnabled
+                            ? "translate-x-3.5"
                             : "translate-x-0"
                         }`}
                       />
                     </button>
                   </div>
-                </div>
-              </fieldset>
-            )}
 
-            {/* Model Selection */}
-            <fieldset className="relative">
-              <button
-                ref={modelTriggerRef}
-                onClick={() => setShowModelDropdown(!showModelDropdown)}
-                className="grid w-full grid-cols-[1fr_auto] items-center gap-2 rounded-xl bg-zinc-800/50 px-3 py-2.5 text-left transition hover:bg-zinc-700/50"
-              >
-                <div className="grid">
-                  <span className="text-xs font-medium whitespace-nowrap text-gray-500">
-                    Model
-                  </span>
-                  <div className="text-sm font-medium text-white">
-                    {modelConfig.name}
-                  </div>
-                </div>
-                <ChevronDownIcon />
-              </button>
-              <Dropdown
-                isOpen={showModelDropdown}
-                onClose={() => setShowModelDropdown(false)}
-                value={videoState.model}
-                onChange={(id) => handleModelChange(id as VideoModelId)}
-                triggerRef={modelTriggerRef}
-                options={Object.values(VIDEO_MODELS).map((model) => ({
-                  id: model.id,
-                  label: model.shortName,
-                  description: model.description,
-                  icon: MODEL_ICONS[model.id],
-                }))}
-              />
-            </fieldset>
+                  {editState.textEnabled && (
+                    <div className="space-y-2">
+                      {/* Text Content */}
+                      <textarea
+                        value={editState.textContent}
+                        onChange={(e) =>
+                          updateEditState({ textContent: e.target.value })
+                        }
+                        className="hide-scrollbar w-full resize-none rounded-lg bg-zinc-700/50 px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:ring-1 focus:ring-cyan-400 focus:outline-none"
+                        placeholder="Enter your text..."
+                        rows={2}
+                      />
 
-            {/* Duration & Aspect Ratio */}
-            <fieldset>
-              <div className="flex w-full items-center gap-2">
-                {/* Duration Dropdown */}
-                <div className="relative flex-1">
-                  <button
-                    ref={durationTriggerRef}
-                    onClick={() =>
-                      setShowDurationDropdown(!showDurationDropdown)
-                    }
-                    className="grid w-full grid-cols-[1fr_auto] items-center gap-2 rounded-xl bg-zinc-800/50 px-3 py-2.5 text-left transition hover:bg-zinc-700/50"
-                  >
-                    <div className="grid">
-                      <span className="text-xs font-medium whitespace-nowrap text-gray-500">
-                        Duration
-                      </span>
-                      <div className="text-sm font-medium text-white">
-                        {videoState.duration}s
+                      {/* Text Preset */}
+                      <div className="relative">
+                        <button
+                          ref={textPresetTriggerRef}
+                          onClick={() =>
+                            setShowTextPresetDropdown(!showTextPresetDropdown)
+                          }
+                          className="grid w-full grid-cols-[1fr_auto] items-center gap-2 rounded-lg bg-zinc-700/50 px-3 py-2 text-left transition hover:bg-zinc-600/50"
+                        >
+                          <div className="grid">
+                            <span className="text-xs text-gray-500">Style</span>
+                            <div className="text-sm font-medium text-white">
+                              {getAllTextPresets().find(
+                                (p) => p.id === editState.textPreset
+                              )?.label || editState.textPreset}
+                            </div>
+                          </div>
+                          <ChevronDownIcon />
+                        </button>
+                        <SimpleDropdown
+                          isOpen={showTextPresetDropdown}
+                          onClose={() => setShowTextPresetDropdown(false)}
+                          value={editState.textPreset}
+                          onChange={(id) => {
+                            updateEditState({ textPreset: id });
+                            setShowTextPresetDropdown(false);
+                          }}
+                          triggerRef={textPresetTriggerRef}
+                          options={getAllTextPresets()}
+                        />
+                      </div>
+
+                      {/* Text Position */}
+                      <div className="relative">
+                        <button
+                          ref={textPositionTriggerRef}
+                          onClick={() =>
+                            setShowTextPositionDropdown(
+                              !showTextPositionDropdown
+                            )
+                          }
+                          className="grid w-full grid-cols-[1fr_auto] items-center gap-2 rounded-lg bg-zinc-700/50 px-3 py-2 text-left transition hover:bg-zinc-600/50"
+                        >
+                          <div className="grid">
+                            <span className="text-xs text-gray-500">
+                              Position
+                            </span>
+                            <div className="text-sm font-medium text-white">
+                              {TEXT_POSITIONS.find(
+                                (p) => p.id === editState.textPosition
+                              )?.label || editState.textPosition}
+                            </div>
+                          </div>
+                          <ChevronDownIcon />
+                        </button>
+                        <SimpleDropdown
+                          isOpen={showTextPositionDropdown}
+                          onClose={() => setShowTextPositionDropdown(false)}
+                          value={editState.textPosition}
+                          onChange={(id) => {
+                            updateEditState({ textPosition: id });
+                            setShowTextPositionDropdown(false);
+                          }}
+                          triggerRef={textPositionTriggerRef}
+                          options={TEXT_POSITIONS}
+                        />
                       </div>
                     </div>
-                    <ChevronDownIcon />
-                  </button>
-                  <SimpleDropdown
-                    isOpen={showDurationDropdown}
-                    onClose={() => setShowDurationDropdown(false)}
-                    value={videoState.duration}
-                    onChange={(id) => handleDurationChange(id as VideoDuration)}
-                    triggerRef={durationTriggerRef}
-                    options={modelConfig.durations.map((d) => ({
-                      id: d,
-                      label: `${d} seconds`,
-                    }))}
-                  />
+                  )}
                 </div>
 
-                {/* Aspect Ratio Dropdown */}
-                <div className="relative flex-1">
-                  <button
-                    ref={aspectTriggerRef}
-                    onClick={() => setShowAspectDropdown(!showAspectDropdown)}
-                    className="grid w-full grid-cols-[1fr_auto] items-center gap-2 rounded-xl bg-zinc-800/50 px-3 py-2.5 text-left transition hover:bg-zinc-700/50"
-                  >
-                    <div className="grid">
-                      <span className="text-xs font-medium whitespace-nowrap text-gray-500">
-                        Aspect Ratio
-                      </span>
-                      <div className="text-sm font-medium text-white">
-                        {videoState.aspectRatio}
+                {/* Section: Subtitles */}
+                <div className="rounded-xl bg-zinc-800/50 p-3">
+                  <div className="mb-3 flex items-center justify-between">
+                    <h3 className="text-xs font-semibold tracking-wider text-gray-400 uppercase">
+                      Subtitles
+                    </h3>
+                    <button
+                      onClick={() =>
+                        updateEditState({
+                          subtitlesEnabled: !editState.subtitlesEnabled,
+                        })
+                      }
+                      className={`relative inline-flex h-5 w-8 shrink-0 cursor-pointer items-center rounded-full transition ${
+                        editState.subtitlesEnabled
+                          ? "bg-cyan-400"
+                          : "bg-zinc-700"
+                      }`}
+                    >
+                      <span
+                        className={`pointer-events-none absolute top-1/2 left-0.5 h-3.5 w-3.5 -translate-y-1/2 transform rounded-full bg-white shadow-lg transition-transform duration-300 ease-in-out ${
+                          editState.subtitlesEnabled
+                            ? "translate-x-3.5"
+                            : "translate-x-0"
+                        }`}
+                      />
+                    </button>
+                  </div>
+
+                  {editState.subtitlesEnabled && (
+                    <div className="space-y-2">
+                      {/* Upload SRT */}
+                      <label className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed border-zinc-600 bg-zinc-700/30 px-3 py-3 text-sm text-gray-400 transition hover:border-cyan-400 hover:text-white">
+                        <input
+                          type="file"
+                          accept=".srt,.vtt"
+                          className="sr-only"
+                        />
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                        >
+                          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" />
+                        </svg>
+                        Upload SRT/VTT
+                      </label>
+
+                      {/* Subtitle Style */}
+                      <div className="relative">
+                        <button
+                          ref={subtitleStyleTriggerRef}
+                          onClick={() =>
+                            setShowSubtitleStyleDropdown(
+                              !showSubtitleStyleDropdown
+                            )
+                          }
+                          className="grid w-full grid-cols-[1fr_auto] items-center gap-2 rounded-lg bg-zinc-700/50 px-3 py-2 text-left transition hover:bg-zinc-600/50"
+                        >
+                          <div className="grid">
+                            <span className="text-xs text-gray-500">Style</span>
+                            <div className="text-sm font-medium text-white">
+                              {TEXT_SUBTITLE_PRESETS[editState.subtitleStyle]
+                                ?.name || editState.subtitleStyle}
+                            </div>
+                          </div>
+                          <ChevronDownIcon />
+                        </button>
+                        <SimpleDropdown
+                          isOpen={showSubtitleStyleDropdown}
+                          onClose={() => setShowSubtitleStyleDropdown(false)}
+                          value={editState.subtitleStyle}
+                          onChange={(id) => {
+                            updateEditState({ subtitleStyle: id });
+                            setShowSubtitleStyleDropdown(false);
+                          }}
+                          triggerRef={subtitleStyleTriggerRef}
+                          options={Object.entries(TEXT_SUBTITLE_PRESETS).map(
+                            ([id, preset]) => ({
+                              id,
+                              label: preset.name,
+                            })
+                          )}
+                        />
                       </div>
                     </div>
-                    <ChevronDownIcon />
-                  </button>
-                  <SimpleDropdown
-                    isOpen={showAspectDropdown}
-                    onClose={() => setShowAspectDropdown(false)}
-                    value={videoState.aspectRatio}
-                    onChange={(id) =>
-                      handleAspectChange(id as VideoAspectRatio)
-                    }
-                    triggerRef={aspectTriggerRef}
-                    options={modelConfig.aspectRatios.map((ar) => ({
-                      id: ar,
-                      label: ar,
-                    }))}
-                  />
+                  )}
                 </div>
-              </div>
-            </fieldset>
 
-            {/* Resolution - Only show if model supports multiple resolutions */}
-            {modelConfig.resolutions && modelConfig.resolutions.length > 0 && (
-              <fieldset className="relative">
-                <button
-                  ref={resolutionTriggerRef}
-                  onClick={() =>
-                    setShowResolutionDropdown(!showResolutionDropdown)
-                  }
-                  className="grid w-full grid-cols-[1fr_auto] items-center gap-2 rounded-xl bg-zinc-800/50 px-3 py-2.5 text-left transition hover:bg-zinc-700/50"
-                >
-                  <div className="grid">
-                    <span className="text-xs font-medium whitespace-nowrap text-gray-500">
-                      Resolution
-                    </span>
-                    <div className="text-sm font-medium text-white">
-                      {videoState.resolution || modelConfig.resolutions[0]}
-                    </div>
+                {/* Section: Audio/Music */}
+                <div className="rounded-xl bg-zinc-800/50 p-3">
+                  <div className="mb-3 flex items-center justify-between">
+                    <h3 className="text-xs font-semibold tracking-wider text-gray-400 uppercase">
+                      Background Music
+                    </h3>
+                    <button
+                      onClick={() =>
+                        updateEditState({
+                          audioEnabled: !editState.audioEnabled,
+                        })
+                      }
+                      className={`relative inline-flex h-5 w-8 shrink-0 cursor-pointer items-center rounded-full transition ${
+                        editState.audioEnabled ? "bg-cyan-400" : "bg-zinc-700"
+                      }`}
+                    >
+                      <span
+                        className={`pointer-events-none absolute top-1/2 left-0.5 h-3.5 w-3.5 -translate-y-1/2 transform rounded-full bg-white shadow-lg transition-transform duration-300 ease-in-out ${
+                          editState.audioEnabled
+                            ? "translate-x-3.5"
+                            : "translate-x-0"
+                        }`}
+                      />
+                    </button>
                   </div>
-                  <ChevronDownIcon />
-                </button>
-                <SimpleDropdown
-                  isOpen={showResolutionDropdown}
-                  onClose={() => setShowResolutionDropdown(false)}
-                  value={videoState.resolution || modelConfig.resolutions[0]}
-                  onChange={(id) =>
-                    handleResolutionChange(id as VideoResolution)
-                  }
-                  triggerRef={resolutionTriggerRef}
-                  options={modelConfig.resolutions.map((res) => ({
-                    id: res,
-                    label: res,
-                  }))}
-                />
-              </fieldset>
+
+                  {editState.audioEnabled && (
+                    <div className="space-y-2">
+                      {/* Upload Audio */}
+                      <label className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed border-zinc-600 bg-zinc-700/30 px-3 py-3 text-sm text-gray-400 transition hover:border-cyan-400 hover:text-white">
+                        <input
+                          type="file"
+                          accept="audio/*"
+                          className="sr-only"
+                        />
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                        >
+                          <path d="M9 18V5l12-2v13" />
+                          <circle cx="6" cy="18" r="3" />
+                          <circle cx="18" cy="16" r="3" />
+                        </svg>
+                        Upload Audio
+                      </label>
+
+                      {/* Volume */}
+                      <div className="flex items-center justify-between rounded-lg bg-zinc-700/50 px-3 py-2">
+                        <span className="text-xs text-gray-500">Volume</span>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="range"
+                            min="0"
+                            max="1"
+                            step="0.05"
+                            value={editState.audioVolume}
+                            onChange={(e) =>
+                              updateEditState({
+                                audioVolume: parseFloat(e.target.value),
+                              })
+                            }
+                            className="h-1 w-20 cursor-pointer appearance-none rounded-full bg-zinc-600 accent-cyan-400"
+                          />
+                          <span className="w-10 text-right text-sm text-white">
+                            {Math.round(editState.audioVolume * 100)}%
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Ducking */}
+                      <div className="flex items-center justify-between rounded-lg bg-zinc-700/50 px-3 py-2">
+                        <div>
+                          <span className="text-xs text-gray-500">
+                            Auto Ducking
+                          </span>
+                          <p className="text-[10px] text-gray-600">
+                            Lower music during speech
+                          </p>
+                        </div>
+                        <button
+                          onClick={() =>
+                            updateEditState({
+                              audioDucking: !editState.audioDucking,
+                            })
+                          }
+                          className={`relative inline-flex h-5 w-8 shrink-0 cursor-pointer items-center rounded-full transition ${
+                            editState.audioDucking
+                              ? "bg-cyan-400"
+                              : "bg-zinc-700"
+                          }`}
+                        >
+                          <span
+                            className={`pointer-events-none absolute top-1/2 left-0.5 h-3.5 w-3.5 -translate-y-1/2 transform rounded-full bg-white shadow-lg transition-transform duration-300 ease-in-out ${
+                              editState.audioDucking
+                                ? "translate-x-3.5"
+                                : "translate-x-0"
+                            }`}
+                          />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </>
             )}
           </div>
 
-          {/* Generate Button - Fixed at bottom */}
+          {/* Generate/Export Button - Fixed at bottom */}
           <div className="px-4 pt-3 pb-4">
-            <button className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-cyan-400 text-sm font-semibold text-black shadow-[inset_0px_-3px_rgba(0,0,0,0.25)] transition hover:bg-cyan-300">
-              Generate
-              <div className="flex items-center gap-0.5">
-                <SparkleIcon />
-                {credits}
-              </div>
-            </button>
+            {activeTab === "create" ? (
+              <button className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-cyan-400 text-sm font-semibold text-black shadow-[inset_0px_-3px_rgba(0,0,0,0.25)] transition hover:bg-cyan-300">
+                Generate
+                <div className="flex items-center gap-0.5">
+                  <SparkleIcon />
+                  {credits}
+                </div>
+              </button>
+            ) : (
+              <button className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-cyan-400 text-sm font-semibold text-black shadow-[inset_0px_-3px_rgba(0,0,0,0.25)] transition hover:bg-cyan-300">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
+                </svg>
+                Export Video
+              </button>
+            )}
           </div>
         </aside>
 
