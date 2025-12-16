@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 interface FeaturedCard {
@@ -13,52 +14,40 @@ interface FeaturedCard {
 
 const featuredCards: FeaturedCard[] = [
   {
-    title: "HOLIDAY SALES",
-    description: "Up to 67% off all plans + 1 year unlimited image generations",
-    image: "/images/holiday-sales.jpg",
-    href: "/pricing",
+    title: "VIDEO ADS",
+    description: "Create scroll-stopping video ads that convert",
+    image: "/images/video-ads.jpg",
+    href: "/video-ads",
   },
   {
-    title: "INPAINT",
-    description: "Brush to edit specific areas or transform entire images",
-    image: "/images/inpaint.jpg",
-    href: "/inpaint",
+    title: "HORROR SHORTS",
+    description: "Terrifying short-form content that keeps viewers hooked",
+    image: "/images/horror-shorts.jpg",
+    href: "/horror-shorts",
   },
   {
-    title: "SHOTS",
-    description: "One image becomes 9 shots. Pick and upscale favorites",
-    image: "/images/shots.jpg",
-    href: "/shots",
+    title: "EDUCATIONAL",
+    description: "Engaging explainers and tutorials that teach",
+    image: "/images/educational.jpg",
+    href: "/educational",
   },
   {
-    title: "AI PORTRAITS",
-    description: "Generate stunning AI portraits in seconds",
-    image: "/images/ai-portraits.jpg",
-    href: "/ai-portraits",
+    title: "FUNNY SHORTS",
+    description: "Comedy content that gets shares and laughs",
+    image: "/images/funny-shorts.jpg",
+    href: "/funny-shorts",
   },
   {
-    title: "VIDEO GEN",
-    description: "Create videos from text prompts with AI",
-    image: "/images/video-gen.jpg",
-    href: "/video-gen",
+    title: "VIRAL SHORTS",
+    description: "Trending formats optimized for maximum reach",
+    image: "/images/viral-shorts.jpg",
+    href: "/viral-shorts",
   },
   {
-    title: "UPSCALER",
-    description: "Enhance image resolution up to 8x",
-    image: "/images/upscaler.jpg",
-    href: "/upscaler",
-  },
-  {
-    title: "STYLE MIX",
-    description: "Blend multiple art styles into one image",
-    image: "/images/style-mix.jpg",
-    href: "/style-mix",
-  },
-  {
-    title: "ANIMATE",
-    description: "Bring still images to life with motion",
-    image: "/images/animate.jpg",
-    href: "/animate",
+    title: "PERSONAL BRANDING",
+    description: "Build your online presence with professional content",
+    image: "/images/personal-branding.jpg",
+    href: "/personal-branding",
   },
 ];
 
@@ -72,7 +61,14 @@ export default function FeaturedCards() {
             href={card.href}
             className="group w-[38%] flex-shrink-0"
           >
-            <div className="relative aspect-[16/9] overflow-hidden rounded-2xl bg-zinc-800"></div>
+            <div className="relative aspect-[16/9] overflow-hidden rounded-2xl bg-zinc-800">
+              <Image
+                src={card.image}
+                alt={card.title}
+                fill
+                className="object-cover transition-transform duration-300 group-hover:scale-105"
+              />
+            </div>
             <div className="mt-2">
               <h4 className="font-heading text-sm text-white transition-colors duration-300 group-hover:text-cyan-400">
                 {card.title}

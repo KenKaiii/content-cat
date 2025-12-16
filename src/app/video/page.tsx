@@ -347,7 +347,9 @@ export default function VideoPage() {
                         : "text-white/80 hover:text-white"
                     }`}
                     onClick={() =>
-                      updateVideoState({ enhanceEnabled: !videoState.enhanceEnabled })
+                      updateVideoState({
+                        enhanceEnabled: !videoState.enhanceEnabled,
+                      })
                     }
                   >
                     <EnhanceIcon />
@@ -372,7 +374,9 @@ export default function VideoPage() {
                     </div>
                     <button
                       onClick={() =>
-                        updateVideoState({ audioEnabled: !videoState.audioEnabled })
+                        updateVideoState({
+                          audioEnabled: !videoState.audioEnabled,
+                        })
                       }
                       className={`relative inline-flex h-6 w-9 shrink-0 cursor-pointer items-center rounded-full transition ${
                         videoState.audioEnabled ? "bg-cyan-400" : "bg-zinc-700"
@@ -380,7 +384,9 @@ export default function VideoPage() {
                     >
                       <span
                         className={`pointer-events-none absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 transform rounded-full bg-white shadow-lg transition-transform duration-300 ease-in-out ${
-                          videoState.audioEnabled ? "translate-x-4" : "translate-x-0"
+                          videoState.audioEnabled
+                            ? "translate-x-4"
+                            : "translate-x-0"
                         }`}
                       />
                     </button>
@@ -428,7 +434,9 @@ export default function VideoPage() {
                 <div className="relative flex-1">
                   <button
                     ref={durationTriggerRef}
-                    onClick={() => setShowDurationDropdown(!showDurationDropdown)}
+                    onClick={() =>
+                      setShowDurationDropdown(!showDurationDropdown)
+                    }
                     className="grid w-full grid-cols-[1fr_auto] items-center gap-2 rounded-xl bg-zinc-800/50 px-3 py-2.5 text-left transition hover:bg-zinc-700/50"
                   >
                     <div className="grid">
@@ -475,7 +483,9 @@ export default function VideoPage() {
                     isOpen={showAspectDropdown}
                     onClose={() => setShowAspectDropdown(false)}
                     value={videoState.aspectRatio}
-                    onChange={(id) => handleAspectChange(id as VideoAspectRatio)}
+                    onChange={(id) =>
+                      handleAspectChange(id as VideoAspectRatio)
+                    }
                     triggerRef={aspectTriggerRef}
                     options={modelConfig.aspectRatios.map((ar) => ({
                       id: ar,
@@ -491,7 +501,9 @@ export default function VideoPage() {
               <fieldset className="relative">
                 <button
                   ref={resolutionTriggerRef}
-                  onClick={() => setShowResolutionDropdown(!showResolutionDropdown)}
+                  onClick={() =>
+                    setShowResolutionDropdown(!showResolutionDropdown)
+                  }
                   className="grid w-full grid-cols-[1fr_auto] items-center gap-2 rounded-xl bg-zinc-800/50 px-3 py-2.5 text-left transition hover:bg-zinc-700/50"
                 >
                   <div className="grid">
@@ -508,7 +520,9 @@ export default function VideoPage() {
                   isOpen={showResolutionDropdown}
                   onClose={() => setShowResolutionDropdown(false)}
                   value={videoState.resolution || modelConfig.resolutions[0]}
-                  onChange={(id) => handleResolutionChange(id as VideoResolution)}
+                  onChange={(id) =>
+                    handleResolutionChange(id as VideoResolution)
+                  }
                   triggerRef={resolutionTriggerRef}
                   options={modelConfig.resolutions.map((res) => ({
                     id: res,

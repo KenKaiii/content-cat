@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Header from "@/components/Header";
 import UploadModal from "@/components/UploadModal";
+import UploadReviewModal from "@/components/UploadReviewModal";
 
 const previewImages = [
   {
@@ -48,20 +50,65 @@ const galleryImages = [
 ];
 
 export default function CreateCharacter() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+
+  const handleFilesSelected = (files: File[]) => {
+    setUploadedFiles(files);
+    setIsUploadModalOpen(false);
+    setIsReviewModalOpen(true);
+  };
+
+  const handleGenerate = (name: string) => {
+    console.log(
+      "Generating character:",
+      name,
+      "with",
+      uploadedFiles.length,
+      "images"
+    );
+    // TODO: Handle character generation
+    setIsReviewModalOpen(false);
+    setUploadedFiles([]);
+  };
+
+  const handleReviewModalClose = () => {
+    setIsReviewModalOpen(false);
+    setUploadedFiles([]);
+  };
 
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-[#0a0a0a]">
       <Header />
-      <UploadModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <UploadModal
+        isOpen={isUploadModalOpen}
+        onClose={() => setIsUploadModalOpen(false)}
+        onFilesSelected={handleFilesSelected}
+      />
+      <UploadReviewModal
+        isOpen={isReviewModalOpen}
+        onClose={handleReviewModalClose}
+        initialFiles={uploadedFiles}
+        onGenerate={handleGenerate}
+      />
       <main className="flex flex-1 flex-col items-center justify-center gap-6 px-6">
         {/* Preview Cards */}
         <div className="flex items-end justify-center">
           {previewImages.map((item) => (
             <div
               key={item.id}
-              className={`overflow-hidden rounded-2xl border-2 border-white bg-zinc-800 ${item.size} ${item.rotation} ${item.z} ${item.offset}`}
-            />
+              className={`relative overflow-hidden rounded-2xl border-2 border-white bg-zinc-800 ${item.size} ${item.rotation} ${item.z} ${item.offset}`}
+            >
+              <Image
+                src={item.image}
+                alt={`Character preview ${item.id}`}
+                fill
+                sizes="200px"
+                priority
+                className="object-cover"
+              />
+            </div>
           ))}
         </div>
 
@@ -80,7 +127,7 @@ export default function CreateCharacter() {
 
         {/* CTA Button */}
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => setIsUploadModalOpen(true)}
           className="mb-4 flex cursor-pointer items-center gap-2 rounded-lg bg-cyan-400 px-6 py-3 font-semibold text-black shadow-lg shadow-cyan-400/25 transition-all duration-300 hover:bg-cyan-500 hover:shadow-cyan-500/30"
         >
           <span>✦</span>
@@ -92,8 +139,17 @@ export default function CreateCharacter() {
           {galleryImages.map((item) => (
             <div
               key={item.id}
-              className="h-72 w-48 flex-shrink-0 overflow-hidden bg-zinc-800"
-            />
+              className="relative h-72 w-48 flex-shrink-0 overflow-hidden rounded-xl bg-zinc-800"
+            >
+              <Image
+                src={item.image}
+                alt={`Gallery image ${item.id}`}
+                fill
+                sizes="192px"
+                priority
+                className="object-cover"
+              />
+            </div>
           ))}
         </div>
       </main>

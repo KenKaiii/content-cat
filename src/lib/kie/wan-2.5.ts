@@ -163,7 +163,9 @@ export class Wan25Client {
       model: "wan/2-5-text-to-video",
       input: {
         prompt: input.prompt,
-        ...(input.negative_prompt && { negative_prompt: input.negative_prompt }),
+        ...(input.negative_prompt && {
+          negative_prompt: input.negative_prompt,
+        }),
         aspect_ratio: input.aspect_ratio || DEFAULT_ASPECT_RATIO,
         resolution: input.resolution || DEFAULT_RESOLUTION,
         duration: input.duration || DEFAULT_DURATION,
@@ -220,7 +222,9 @@ export class Wan25Client {
       input: {
         prompt: input.prompt,
         image_url: input.image_url,
-        ...(input.negative_prompt && { negative_prompt: input.negative_prompt }),
+        ...(input.negative_prompt && {
+          negative_prompt: input.negative_prompt,
+        }),
         resolution: input.resolution || DEFAULT_RESOLUTION,
         duration: input.duration || DEFAULT_DURATION,
         enable_prompt_expansion:

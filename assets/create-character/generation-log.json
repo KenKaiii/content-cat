@@ -1,0 +1,81 @@
+{
+  "timestamp": "2025-12-15T20:44:32.760Z",
+  "results": [
+    {
+      "success": true,
+      "filename": "character-1.jpg"
+    },
+    {
+      "success": true,
+      "filename": "character-2.jpg"
+    },
+    {
+      "success": true,
+      "filename": "character-3.jpg"
+    },
+    {
+      "success": true,
+      "filename": "character-4.jpg"
+    },
+    {
+      "success": true,
+      "filename": "gallery-1.jpg"
+    },
+    {
+      "success": true,
+      "filename": "gallery-2.jpg"
+    },
+    {
+      "success": true,
+      "filename": "gallery-3.jpg"
+    },
+    {
+      "success": true,
+      "filename": "gallery-4.jpg"
+    },
+    {
+      "success": true,
+      "filename": "gallery-5.jpg"
+    },
+    {
+      "success": true,
+      "filename": "good-1.jpg"
+    },
+    {
+      "success": true,
+      "filename": "good-2.jpg"
+    },
+    {
+      "success": true,
+      "filename": "good-3.jpg"
+    },
+    {
+      "success": true,
+      "filename": "good-4.jpg"
+    },
+    {
+      "success": true,
+      "filename": "good-5.jpg"
+    },
+    {
+      "success": true,
+      "filename": "bad-1.jpg"
+    },
+    {
+      "success": true,
+      "filename": "bad-2.jpg"
+    },
+    {
+      "success": true,
+      "filename": "bad-3.jpg"
+    },
+    {
+      "success": true,
+      "filename": "bad-4.jpg"
+    },
+    {
+      "success": true,
+      "filename": "bad-5.jpg"
+    }
+  ]
+}

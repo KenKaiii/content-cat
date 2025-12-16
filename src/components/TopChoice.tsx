@@ -1,9 +1,17 @@
+"use client";
+
 import Link from "next/link";
+import { useState, useEffect } from "react";
+import {
+  ReactCompareSlider,
+  ReactCompareSliderImage,
+} from "react-compare-slider";
 
 interface ToolCard {
   title: string;
   description: string;
   image: string;
+  imageAfter?: string;
   href: string;
   badge?: {
     text: string;
@@ -13,82 +21,63 @@ interface ToolCard {
 
 const toolCards: ToolCard[] = [
   {
-    title: "Nano Banana Pro",
-    description: "Best 4K image model ever",
-    image: "/images/nano-banana.jpg",
-    href: "/tools/nano-banana",
-    badge: { text: "UNLIMITED", variant: "unlimited" },
+    title: "Sharpen Image",
+    description: "Transform blurry photos into crisp images",
+    image: "/images/sharpen-before.jpg",
+    imageAfter: "/images/sharpen-after.jpg",
+    href: "/tools/sharpen",
   },
   {
-    title: "Skin Enhancer",
-    description: "Natural, realistic skin textures",
-    image: "/images/skin-enhancer.jpg",
-    href: "/tools/skin-enhancer",
-    badge: { text: "PRO", variant: "pro" },
-  },
-  {
-    title: "Kling 2.6",
-    description: "Cinematic videos with audio",
-    image: "/images/kling.jpg",
-    href: "/tools/kling",
-    badge: { text: "NEW", variant: "new" },
-  },
-  {
-    title: "Face Swap",
-    description: "The best instant AI face swap t...",
-    image: "/images/face-swap.jpg",
-    href: "/tools/face-swap",
-  },
-  {
-    title: "Angles",
-    description: "Generate any angle view for an...",
-    image: "/images/angles.jpg",
-    href: "/tools/angles",
-  },
-  {
-    title: "Seedream 4.5",
-    description: "Next-gen 4K image",
-    image: "/images/seedream.jpg",
-    href: "/tools/seedream",
-  },
-  {
-    title: "Portrait Master",
-    description: "Professional portrait editing",
-    image: "/images/portrait-master.jpg",
-    href: "/tools/portrait-master",
+    title: "Upscale",
+    description: "Enhance resolution up to 8x",
+    image: "/images/upscale-before.jpg",
+    imageAfter: "/images/upscale-after.jpg",
+    href: "/tools/upscale",
     badge: { text: "PRO", variant: "pro" },
   },
   {
     title: "Background Remix",
-    description: "Transform any background",
-    image: "/images/background-remix.jpg",
+    description: "Transform any background instantly",
+    image: "/images/bg-remix-before.jpg",
+    imageAfter: "/images/bg-remix-after.jpg",
     href: "/tools/background-remix",
   },
   {
-    title: "Style Transfer",
-    description: "Apply artistic styles instantly",
-    image: "/images/style-transfer.jpg",
-    href: "/tools/style-transfer",
+    title: "Color Grade",
+    description: "Professional cinematic color correction",
+    image: "/images/color-before.jpg",
+    imageAfter: "/images/color-after.jpg",
+    href: "/tools/color-grade",
+  },
+  {
+    title: "Portrait Enhance",
+    description: "Turn selfies into professional portraits",
+    image: "/images/portrait-before.jpg",
+    imageAfter: "/images/portrait-after.jpg",
+    href: "/tools/portrait-enhance",
     badge: { text: "NEW", variant: "new" },
   },
   {
-    title: "Video Upscale",
-    description: "Enhance video resolution to 4K",
-    image: "/images/video-upscale.jpg",
-    href: "/tools/video-upscale",
+    title: "Lighting Fix",
+    description: "Fix poorly lit photos with AI",
+    image: "/images/lighting-before.jpg",
+    imageAfter: "/images/lighting-after.jpg",
+    href: "/tools/lighting-fix",
   },
   {
-    title: "Motion Blur",
-    description: "Add cinematic motion effects",
-    image: "/images/motion-blur.jpg",
-    href: "/tools/motion-blur",
+    title: "Product Photo",
+    description: "Create stunning product ad shots",
+    image: "/images/product-before.jpg",
+    imageAfter: "/images/product-after.jpg",
+    href: "/tools/product-photo",
+    badge: { text: "PRO", variant: "pro" },
   },
   {
-    title: "Color Grade",
-    description: "Professional color correction",
-    image: "/images/color-grade.jpg",
-    href: "/tools/color-grade",
-    badge: { text: "UNLIMITED", variant: "unlimited" },
+    title: "Style Transfer",
+    description: "Apply artistic styles to any image",
+    image: "/images/style-before.jpg",
+    imageAfter: "/images/style-after.jpg",
+    href: "/tools/style-transfer",
   },
 ];
 
@@ -97,6 +86,83 @@ const badgeStyles = {
   pro: "bg-green-600",
   new: "bg-zinc-600",
 };
+
+function AnimatedCompareSlider({
+  image,
+  imageAfter,
+  title,
+}: {
+  image: string;
+  imageAfter: string;
+  title: string;
+}) {
+  const [position, setPosition] = useState(() => Math.random() * 60 + 20); // Random start 20-80
+  const [direction, setDirection] = useState(() =>
+    Math.random() > 0.5 ? 1 : -1
+  );
+  const [speed] = useState(() => Math.random() * 0.3 + 0.15); // Random speed 0.15-0.45
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    if (isPaused) return;
+
+    const interval = setInterval(() => {
+      setPosition((prev) => {
+        let next = prev + direction * speed;
+
+        // Bounce at edges
+        if (next >= 85) {
+          setDirection(-1);
+          next = 85;
+        } else if (next <= 15) {
+          setDirection(1);
+          next = 15;
+        }
+
+        return next;
+      });
+    }, 16); // ~60fps
+
+    return () => clearInterval(interval);
+  }, [direction, speed, isPaused]);
+
+  return (
+    <div
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
+      <ReactCompareSlider
+        itemOne={
+          <ReactCompareSliderImage
+            src={image}
+            alt={`${title} before`}
+            style={{ objectFit: "cover", width: "100%", height: "100%" }}
+          />
+        }
+        itemTwo={
+          <ReactCompareSliderImage
+            src={imageAfter}
+            alt={`${title} after`}
+            style={{ objectFit: "cover", width: "100%", height: "100%" }}
+          />
+        }
+        handle={
+          <div
+            style={{
+              width: 2,
+              height: "100%",
+              backgroundColor: "white",
+              boxShadow: "0 0 4px rgba(0,0,0,0.5)",
+            }}
+          />
+        }
+        style={{ width: "100%", height: "100%" }}
+        position={position}
+        onlyHandleDraggable
+      />
+    </div>
+  );
+}
 
 export default function TopChoice() {
   return (
@@ -124,9 +190,23 @@ export default function TopChoice() {
             className="group h-56 w-[17%] min-w-[160px] flex-shrink-0 overflow-hidden rounded-2xl border border-zinc-700/50 bg-zinc-900 transition-colors duration-300 hover:bg-zinc-800"
           >
             <div className="relative h-40 w-full overflow-hidden bg-zinc-800">
+              {card.imageAfter ? (
+                <AnimatedCompareSlider
+                  image={card.image}
+                  imageAfter={card.imageAfter}
+                  title={card.title}
+                />
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={card.image}
+                  alt={card.title}
+                  className="h-full w-full object-cover"
+                />
+              )}
               {card.badge && (
                 <span
-                  className={`${badgeStyles[card.badge.variant]} absolute top-3 left-3 rounded px-2 py-0.5 text-[10px] font-medium text-white`}
+                  className={`${badgeStyles[card.badge.variant]} absolute top-3 left-3 z-10 rounded px-2 py-0.5 text-[10px] font-medium text-white`}
                 >
                   {card.badge.text}
                 </span>

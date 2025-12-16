@@ -18,7 +18,9 @@ async function runTests() {
 
   if (!API_KEY) {
     console.error("Error: KIE_API_KEY environment variable is required");
-    console.log("Usage: KIE_API_KEY=your_key npx tsx src/lib/kie/test-nano-banana-pro.ts");
+    console.log(
+      "Usage: KIE_API_KEY=your_key npx tsx src/lib/kie/test-nano-banana-pro.ts"
+    );
     process.exit(1);
   }
 
@@ -89,10 +91,13 @@ async function runTests() {
   console.log("\n--- Test 3: With reference image ---");
   try {
     // Using the cat image from test 1 as reference (if available)
-    const referenceImage = test1Url || "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Cat03.jpg/1200px-Cat03.jpg";
+    const referenceImage =
+      test1Url ||
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Cat03.jpg/1200px-Cat03.jpg";
     const result = await client.generateImage(
       {
-        prompt: "Transform into a watercolor painting style, soft pastel colors",
+        prompt:
+          "Transform into a watercolor painting style, soft pastel colors",
         image_input: [referenceImage],
         aspect_ratio: "1:1",
         resolution: "1K",

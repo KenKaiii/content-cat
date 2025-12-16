@@ -99,7 +99,9 @@ export function getModelConfig(modelId: VideoModelId): VideoModelConfig {
   return VIDEO_MODELS[modelId];
 }
 
-export function getDefaultState(modelId: VideoModelId = "kling-2.6"): VideoGenerationState {
+export function getDefaultState(
+  modelId: VideoModelId = "kling-2.6"
+): VideoGenerationState {
   const config = VIDEO_MODELS[modelId];
   return {
     model: modelId,
@@ -144,7 +146,9 @@ export function validateState(state: VideoGenerationState): string[] {
   }
 
   if (!config.aspectRatios.includes(state.aspectRatio)) {
-    errors.push(`Aspect ratio ${state.aspectRatio} not supported by ${config.name}`);
+    errors.push(
+      `Aspect ratio ${state.aspectRatio} not supported by ${config.name}`
+    );
   }
 
   if (!config.durations.includes(state.duration)) {

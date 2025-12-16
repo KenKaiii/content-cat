@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect } from "react";
+import Image from "next/image";
 
 interface UploadModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onFilesSelected?: (files: File[]) => void;
 }
 
 const goodPhotos = [
@@ -66,7 +68,11 @@ const UploadIcon = () => (
   </svg>
 );
 
-export default function UploadModal({ isOpen, onClose }: UploadModalProps) {
+export default function UploadModal({
+  isOpen,
+  onClose,
+  onFilesSelected,
+}: UploadModalProps) {
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -122,7 +128,12 @@ export default function UploadModal({ isOpen, onClose }: UploadModalProps) {
                 className="relative grid aspect-[0.8] w-24 items-end justify-start gap-3 overflow-hidden rounded-xl border-2 border-white p-2 md:w-full"
               >
                 <div className="absolute inset-0 z-10 bg-gradient-to-t from-cyan-400/50 to-transparent to-50%" />
-                <div className="absolute inset-0 bg-zinc-800" />
+                <Image
+                  src={photo.image}
+                  alt={`Good reference photo ${photo.id}`}
+                  fill
+                  className="object-cover"
+                />
                 <div className="z-20 grid h-6 w-6 items-center justify-center rounded-lg bg-cyan-400 text-black">
                   <CheckIcon />
                 </div>
@@ -154,7 +165,12 @@ export default function UploadModal({ isOpen, onClose }: UploadModalProps) {
                 className="relative grid aspect-[0.8] w-24 items-end justify-start gap-3 overflow-hidden rounded-xl border-2 border-white p-2 md:w-full"
               >
                 <div className="absolute inset-0 z-10 bg-gradient-to-t from-red-500/40 to-transparent to-50%" />
-                <div className="absolute inset-0 bg-zinc-800" />
+                <Image
+                  src={photo.image}
+                  alt={`Bad reference photo ${photo.id}`}
+                  fill
+                  className="object-cover"
+                />
                 <div className="z-20 grid h-6 w-6 items-center justify-center rounded-lg bg-red-500 text-white">
                   <XIcon />
                 </div>
@@ -170,13 +186,13 @@ export default function UploadModal({ isOpen, onClose }: UploadModalProps) {
             Upload images
             <input
               type="file"
-              accept="image/*"
+              accept="image/jpeg,image/jpg,image/png,image/webp,image/heic"
               multiple
               className="hidden"
               onChange={(e) => {
                 const files = e.target.files;
-                if (files) {
-                  console.log("Selected files:", files);
+                if (files && files.length > 0) {
+                  onFilesSelected?.(Array.from(files));
                 }
               }}
             />

@@ -94,7 +94,7 @@ export function Dropdown({
               onChange(option.id);
               onClose();
             }}
-            className={`flex w-full items-center gap-3 rounded-xl p-2 text-left outline-none transition-colors hover:bg-white/5 ${
+            className={`flex w-full items-center gap-3 rounded-xl p-2 text-left transition-colors outline-none hover:bg-white/5 ${
               value === option.id ? "bg-white/10" : ""
             }`}
           >
@@ -190,7 +190,7 @@ export function SimpleDropdown({
               onChange(option.id);
               onClose();
             }}
-            className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left outline-none transition-colors hover:bg-white/5 ${
+            className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left transition-colors outline-none hover:bg-white/5 ${
               value === option.id ? "bg-white/10" : ""
             }`}
           >

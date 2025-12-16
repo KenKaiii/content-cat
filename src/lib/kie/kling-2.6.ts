@@ -263,7 +263,12 @@ export class Kling26Client {
       throw new Error("Failed to get task ID from response");
     }
 
-    return this.pollForCompletion(taskId, pollInterval, maxAttempts, options?.onStateUpdate);
+    return this.pollForCompletion(
+      taskId,
+      pollInterval,
+      maxAttempts,
+      options?.onStateUpdate
+    );
   }
 
   /**
@@ -287,7 +292,12 @@ export class Kling26Client {
       throw new Error("Failed to get task ID from response");
     }
 
-    return this.pollForCompletion(taskId, pollInterval, maxAttempts, options?.onStateUpdate);
+    return this.pollForCompletion(
+      taskId,
+      pollInterval,
+      maxAttempts,
+      options?.onStateUpdate
+    );
   }
 
   /**

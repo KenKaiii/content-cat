@@ -26,6 +26,7 @@ npm install
 ```
 
 Read ALL output carefully. Look for:
+
 - Deprecation warnings
 - Security vulnerabilities
 - Peer dependency warnings
@@ -34,6 +35,7 @@ Read ALL output carefully. Look for:
 ## Step 4: Fix Issues
 
 For each warning/deprecation:
+
 1. Research the recommended replacement or fix
 2. Update code/dependencies accordingly
 3. Re-run installation
