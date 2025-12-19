@@ -75,7 +75,7 @@ export default function LoginPage() {
               {/* Email input */}
               <div className="grid w-full">
                 <input
-                  className="h-[42px] w-full rounded-xl border border-transparent bg-[#1a1a1a] px-4 text-sm font-medium text-zinc-300 placeholder:text-zinc-500 transition focus:border-zinc-600 focus:bg-[#0a0a0a] focus:outline-none hover:border-white/20"
+                  className="h-[42px] w-full rounded-xl border border-transparent bg-[#1a1a1a] px-4 text-sm font-medium text-zinc-300 transition placeholder:text-zinc-500 hover:border-white/20 focus:border-zinc-600 focus:bg-[#0a0a0a] focus:outline-none"
                   placeholder="Email"
                   required
                   type="email"
@@ -89,7 +89,7 @@ export default function LoginPage() {
               {/* Password input */}
               <div className="grid w-full">
                 <input
-                  className="h-[42px] w-full rounded-xl border border-transparent bg-[#1a1a1a] px-4 text-sm font-medium text-zinc-300 placeholder:text-zinc-500 transition focus:border-zinc-600 focus:bg-[#0a0a0a] focus:outline-none hover:border-white/20"
+                  className="h-[42px] w-full rounded-xl border border-transparent bg-[#1a1a1a] px-4 text-sm font-medium text-zinc-300 transition placeholder:text-zinc-500 hover:border-white/20 focus:border-zinc-600 focus:bg-[#0a0a0a] focus:outline-none"
                   placeholder="Password"
                   required
                   type="password"
@@ -102,7 +102,7 @@ export default function LoginPage() {
 
               {/* Submit button */}
               <input
-                className="inline-grid h-12 w-full max-w-full cursor-pointer content-center items-center justify-center overflow-hidden text-ellipsis whitespace-nowrap rounded-xl border border-transparent bg-[#e8e8e8] text-sm font-medium text-[#131313] ring-transparent transition hover:bg-[#d4d4d4] focus:outline-none focus-visible:ring-2 disabled:cursor-wait disabled:bg-[#2a2a2a] disabled:text-zinc-600"
+                className="inline-grid h-12 w-full max-w-full cursor-pointer content-center items-center justify-center overflow-hidden rounded-xl border border-transparent bg-[#e8e8e8] text-sm font-medium text-ellipsis whitespace-nowrap text-[#131313] ring-transparent transition hover:bg-[#d4d4d4] focus:outline-none focus-visible:ring-2 disabled:cursor-wait disabled:bg-[#2a2a2a] disabled:text-zinc-600"
                 type="submit"
                 value={isLoading ? "Logging in..." : "Log in"}
               />
@@ -112,14 +112,14 @@ export default function LoginPage() {
           {/* Links */}
           <div className="mt-4 flex justify-between text-zinc-500">
             <Link
-              className="inline-grid grid-flow-col content-center gap-1.5 overflow-hidden text-ellipsis whitespace-nowrap text-sm font-medium transition hover:brightness-75"
+              className="inline-grid grid-flow-col content-center gap-1.5 overflow-hidden text-sm font-medium text-ellipsis whitespace-nowrap transition hover:brightness-75"
               href="/"
             >
               ← Back
             </Link>
             <button
               type="button"
-              className="inline-grid grid-flow-col content-center gap-1.5 overflow-hidden text-ellipsis whitespace-nowrap text-sm font-medium transition hover:brightness-75"
+              className="inline-grid grid-flow-col content-center gap-1.5 overflow-hidden text-sm font-medium text-ellipsis whitespace-nowrap transition hover:brightness-75"
               onClick={() => alert("Contact admin to reset password")}
             >
               Forgot Password

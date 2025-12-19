@@ -18,7 +18,11 @@ interface UseEntityManagementReturn {
   deleteEntityId: string | null;
   fetchEntities: () => Promise<void>;
   handleCreate: (name: string, images: UploadedImage[]) => Promise<void>;
-  handleSaveEdit: (id: string, name: string, images: UploadedImage[]) => Promise<void>;
+  handleSaveEdit: (
+    id: string,
+    name: string,
+    images: UploadedImage[]
+  ) => Promise<void>;
   handleDelete: (id: string) => void;
   confirmDelete: () => Promise<void>;
   cancelDelete: () => void;
@@ -34,7 +38,8 @@ export function useEntityManagement({
   const [editingEntity, setEditingEntity] = useState<Entity | null>(null);
   const [deleteEntityId, setDeleteEntityId] = useState<string | null>(null);
 
-  const apiPath = entityType === "character" ? "/api/characters" : "/api/products";
+  const apiPath =
+    entityType === "character" ? "/api/characters" : "/api/products";
   const entityName = entityType === "character" ? "character" : "product";
 
   const fetchEntities = useCallback(async () => {

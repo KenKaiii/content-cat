@@ -10,10 +10,7 @@ import type {
   VideoModelConfig,
 } from "@/lib/fal";
 import { SparkleIcon, ExportIcon } from "../icons";
-import {
-  getDefaultEditState,
-  type EditVideoState,
-} from "../constants";
+import { getDefaultEditState, type EditVideoState } from "../constants";
 import CreateVideoForm from "./CreateVideoForm";
 import EditVideoForm from "./EditVideoForm";
 

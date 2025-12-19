@@ -18,7 +18,8 @@ export async function GET(request: Request) {
     const limitParam = searchParams.get("limit");
     const includeFrames = searchParams.get("includeFrames") === "true";
     const limit = Math.min(
-      parseInt(limitParam || String(DEFAULT_PAGE_SIZE), 10) || DEFAULT_PAGE_SIZE,
+      parseInt(limitParam || String(DEFAULT_PAGE_SIZE), 10) ||
+        DEFAULT_PAGE_SIZE,
       MAX_PAGE_SIZE
     );
 

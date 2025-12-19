@@ -28,6 +28,7 @@ const PROTECTED_PAGE_ROUTES = [
   "/",
   "/image",
   "/video",
+  "/workflow",
   "/create-character",
   "/products",
   "/prompts",
@@ -43,6 +44,7 @@ const PROTECTED_API_PREFIXES = [
   "/api/generate-image",
   "/api/generate-video",
   "/api/upload",
+  "/api/workflows",
 ];
 
 function addSecurityHeaders(response: NextResponse): NextResponse {

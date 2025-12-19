@@ -1,10 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import {
-  NestedDropdown,
-  SimpleDropdown,
-} from "@/components/Dropdown";
+import { NestedDropdown, SimpleDropdown } from "@/components/Dropdown";
 import type {
   VideoModelId,
   VideoGenerationState,

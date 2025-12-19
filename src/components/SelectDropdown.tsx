@@ -1,7 +1,11 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { ChevronDownIcon, CheckIcon, aspectRatioIcons } from "@/components/icons";
+import {
+  ChevronDownIcon,
+  CheckIcon,
+  aspectRatioIcons,
+} from "@/components/icons";
 
 interface SelectDropdownProps {
   options: { value: string; label: string }[];

@@ -47,7 +47,10 @@ self.onmessage = async (e: MessageEvent<CompressMessage>) => {
       const canvas = new OffscreenCanvas(newWidth, newHeight);
       const ctx = canvas.getContext("2d");
       if (!ctx) {
-        self.postMessage({ type: "error", error: "Failed to get canvas context" });
+        self.postMessage({
+          type: "error",
+          error: "Failed to get canvas context",
+        });
         return;
       }
 
@@ -59,7 +62,10 @@ self.onmessage = async (e: MessageEvent<CompressMessage>) => {
       // Try different quality levels
       const qualities = [0.92, 0.85, 0.75, 0.65, 0.5];
       for (const quality of qualities) {
-        const blob = await canvas.convertToBlob({ type: "image/jpeg", quality });
+        const blob = await canvas.convertToBlob({
+          type: "image/jpeg",
+          quality,
+        });
         if (blob.size <= MAX_BASE64_SIZE * 0.75) {
           const base64 = await blobToBase64(blob);
           self.postMessage({ type: "success", base64 });
@@ -68,7 +74,10 @@ self.onmessage = async (e: MessageEvent<CompressMessage>) => {
       }
 
       // Use lowest quality if still too large
-      const blob = await canvas.convertToBlob({ type: "image/jpeg", quality: 0.5 });
+      const blob = await canvas.convertToBlob({
+        type: "image/jpeg",
+        quality: 0.5,
+      });
       const base64 = await blobToBase64(blob);
       self.postMessage({ type: "success", base64 });
     } catch (error) {

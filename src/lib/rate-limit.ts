@@ -32,7 +32,9 @@ function getRedisClient(): Redis | null {
         retryStrategy: (times) => {
           if (times > 3) {
             redisAvailable = false;
-            logger.warn("Redis unavailable, falling back to in-memory rate limiting");
+            logger.warn(
+              "Redis unavailable, falling back to in-memory rate limiting"
+            );
             return null;
           }
           return Math.min(times * 100, 3000);

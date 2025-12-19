@@ -37,7 +37,7 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     logger.error("Session cleanup failed", {
-      error: error instanceof Error ? error.message : "Unknown error"
+      error: error instanceof Error ? error.message : "Unknown error",
     });
 
     return NextResponse.json(

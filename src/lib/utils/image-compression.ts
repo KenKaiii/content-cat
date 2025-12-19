@@ -71,10 +71,9 @@ export const compressImage = (file: File): Promise<string> => {
               }
             };
             worker.addEventListener("message", handler);
-            worker.postMessage(
-              { type: "compress", imageData, width, height },
-              [imageData.data.buffer]
-            );
+            worker.postMessage({ type: "compress", imageData, width, height }, [
+              imageData.data.buffer,
+            ]);
           });
           resolve(result);
           return;

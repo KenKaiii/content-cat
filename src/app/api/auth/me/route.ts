@@ -7,10 +7,7 @@ export async function GET() {
     const session = await validateSession();
 
     if (!session) {
-      return NextResponse.json(
-        { error: "Not authenticated" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
     return NextResponse.json({
@@ -23,9 +20,6 @@ export async function GET() {
     logger.error("Auth check error", {
       error: error instanceof Error ? error.message : "Unknown error",
     });
-    return NextResponse.json(
-      { error: "An error occurred" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "An error occurred" }, { status: 500 });
   }
 }

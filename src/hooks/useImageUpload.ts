@@ -103,7 +103,13 @@ export function useImageUpload(options: UseImageUploadOptions = {}) {
         setIsSwapping(false);
       }, 50);
     }, 150);
-  }, [startImageUrl, endImageUrl, onStartImageChange, onEndImageChange, onModeChange]);
+  }, [
+    startImageUrl,
+    endImageUrl,
+    onStartImageChange,
+    onEndImageChange,
+    onModeChange,
+  ]);
 
   // Reset all images (useful when switching models)
   const resetImages = useCallback(() => {

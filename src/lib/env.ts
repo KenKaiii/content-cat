@@ -39,7 +39,8 @@ export function validateEnv(): EnvConfig {
   const databaseUrl = getEnvVar("DATABASE_URL");
   validateDatabaseUrl(databaseUrl);
 
-  const nodeEnv = (process.env.NODE_ENV || "development") as EnvConfig["NODE_ENV"];
+  const nodeEnv = (process.env.NODE_ENV ||
+    "development") as EnvConfig["NODE_ENV"];
   if (!["development", "production", "test"].includes(nodeEnv)) {
     console.warn(`Unknown NODE_ENV: ${nodeEnv}, defaulting to development`);
   }

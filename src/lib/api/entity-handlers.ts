@@ -95,7 +95,9 @@ export function createGetByIdHandler(entityType: EntityType) {
       const { id } = await params;
       const entity =
         entityType === "character"
-          ? await prisma.character.findFirst({ where: { id, userId: user!.id } })
+          ? await prisma.character.findFirst({
+              where: { id, userId: user!.id },
+            })
           : await prisma.product.findFirst({ where: { id, userId: user!.id } });
 
       if (!entity) {

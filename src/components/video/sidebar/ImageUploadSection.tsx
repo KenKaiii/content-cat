@@ -44,7 +44,7 @@ export default function ImageUploadSection({
             type="button"
             disabled={isSwapping}
             onClick={onSwapImages}
-            className="absolute left-1/2 top-1/2 z-[3] flex size-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-md border border-zinc-700 bg-zinc-900 text-cyan-400 transition hover:bg-zinc-800 disabled:opacity-50"
+            className="absolute top-1/2 left-1/2 z-[3] flex size-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-md border border-zinc-700 bg-zinc-900 text-cyan-400 transition hover:bg-zinc-800 disabled:opacity-50"
           >
             <SwapIcon />
           </button>
@@ -55,7 +55,7 @@ export default function ImageUploadSection({
           className="group relative size-full rounded-lg"
           style={{ height: "120px" }}
         >
-          <label className="size-full relative rounded-lg overflow-hidden cursor-pointer block">
+          <label className="relative block size-full cursor-pointer overflow-hidden rounded-lg">
             <input
               ref={startImageInputRef}
               accept="image/jpeg, image/jpg, image/png, image/webp"
@@ -76,7 +76,7 @@ export default function ImageUploadSection({
                 }}
               />
             ) : (
-              <div className="flex size-full flex-col items-center justify-center rounded-lg border border-dashed border-zinc-700 hover:border-zinc-500 transition-colors">
+              <div className="flex size-full flex-col items-center justify-center rounded-lg border border-dashed border-zinc-700 transition-colors hover:border-zinc-500">
                 <div className="flex size-8 items-center justify-center rounded-lg bg-zinc-800 p-1.5">
                   <ImageUploadIcon />
                 </div>
@@ -95,7 +95,7 @@ export default function ImageUploadSection({
                   e.stopPropagation();
                   onClearImage("start");
                 }}
-                className="flex size-5 items-center justify-center rounded-md bg-zinc-800 border border-zinc-700 text-white/80 transition hover:bg-zinc-700 hover:text-white"
+                className="flex size-5 items-center justify-center rounded-md border border-zinc-700 bg-zinc-800 text-white/80 transition hover:bg-zinc-700 hover:text-white"
               >
                 <CloseIcon />
               </button>
@@ -113,7 +113,7 @@ export default function ImageUploadSection({
           className="group relative size-full rounded-lg"
           style={{ height: "120px" }}
         >
-          <label className="size-full relative rounded-lg overflow-hidden cursor-pointer block">
+          <label className="relative block size-full cursor-pointer overflow-hidden rounded-lg">
             <input
               ref={endImageInputRef}
               accept="image/jpeg, image/jpg, image/png, image/webp"
@@ -134,7 +134,7 @@ export default function ImageUploadSection({
                 }}
               />
             ) : (
-              <div className="flex size-full flex-col items-center justify-center rounded-lg border border-dashed border-zinc-700 hover:border-zinc-500 transition-colors">
+              <div className="flex size-full flex-col items-center justify-center rounded-lg border border-dashed border-zinc-700 transition-colors hover:border-zinc-500">
                 <div className="flex size-8 items-center justify-center rounded-lg bg-zinc-800 p-1.5">
                   <ImageUploadIcon />
                 </div>
@@ -153,7 +153,7 @@ export default function ImageUploadSection({
                   e.stopPropagation();
                   onClearImage("end");
                 }}
-                className="flex size-5 items-center justify-center rounded-md bg-zinc-800 border border-zinc-700 text-white/80 transition hover:bg-zinc-700 hover:text-white"
+                className="flex size-5 items-center justify-center rounded-md border border-zinc-700 bg-zinc-800 text-white/80 transition hover:bg-zinc-700 hover:text-white"
               >
                 <CloseIcon />
               </button>
@@ -175,7 +175,7 @@ export default function ImageUploadSection({
       className="group relative size-full rounded-lg select-none"
       style={{ height: "120px" }}
     >
-      <label className="size-full relative rounded-lg overflow-hidden cursor-pointer block">
+      <label className="relative block size-full cursor-pointer overflow-hidden rounded-lg">
         <input
           accept="image/jpeg, image/jpg, image/png, image/webp"
           className="sr-only"
@@ -195,7 +195,7 @@ export default function ImageUploadSection({
             }}
           />
         ) : (
-          <div className="flex size-full flex-col items-center justify-center rounded-lg border border-dashed border-zinc-700 hover:border-zinc-500 transition-colors">
+          <div className="flex size-full flex-col items-center justify-center rounded-lg border border-dashed border-zinc-700 transition-colors hover:border-zinc-500">
             <div className="flex size-9 items-center justify-center rounded-lg bg-zinc-800 p-1.5 shadow-[0_-1.872px_0_0_rgba(20,1,8,0.30)_inset,0_3.744px_3.744px_0_rgba(0,0,0,0.25)]">
               <ImageUploadIcon />
             </div>
@@ -220,7 +220,7 @@ export default function ImageUploadSection({
               e.stopPropagation();
               onClearImage("single");
             }}
-            className="flex size-5 items-center justify-center rounded-md bg-zinc-800 border border-zinc-700 text-white/80 transition hover:bg-zinc-700 hover:text-white"
+            className="flex size-5 items-center justify-center rounded-md border border-zinc-700 bg-zinc-800 text-white/80 transition hover:bg-zinc-700 hover:text-white"
           >
             <CloseIcon />
           </button>

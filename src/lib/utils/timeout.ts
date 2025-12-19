@@ -24,7 +24,11 @@ export function withTimeout<T>(
 
   const timeoutPromise = new Promise<never>((_, reject) => {
     timeoutId = setTimeout(() => {
-      reject(new TimeoutError(errorMessage || `Operation timed out after ${timeoutMs}ms`));
+      reject(
+        new TimeoutError(
+          errorMessage || `Operation timed out after ${timeoutMs}ms`
+        )
+      );
     }, timeoutMs);
   });
 

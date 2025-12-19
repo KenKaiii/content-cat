@@ -44,7 +44,10 @@ export function maskApiKey(key: string): string {
  * @param service - The service name (default: "fal")
  * @returns The API key if found and active, null otherwise
  */
-export async function getApiKey(userId: string, service: string = "fal"): Promise<string | null> {
+export async function getApiKey(
+  userId: string,
+  service: string = "fal"
+): Promise<string | null> {
   try {
     const storedKey = await prisma.apiKey.findUnique({
       where: { userId_service: { userId, service } },
@@ -68,7 +71,10 @@ export async function getApiKey(userId: string, service: string = "fal"): Promis
  * @param service - The service name (default: "fal")
  * @returns True if key exists and is active
  */
-export async function hasActiveApiKey(userId: string, service: string = "fal"): Promise<boolean> {
+export async function hasActiveApiKey(
+  userId: string,
+  service: string = "fal"
+): Promise<boolean> {
   try {
     const count = await prisma.apiKey.count({
       where: { userId, service, isActive: true },

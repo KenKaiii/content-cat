@@ -24,7 +24,7 @@ export function useVideoHistory() {
         const result = await response.json();
         if (cursor) {
           // Append to existing videos
-          setGeneratedVideos(prev => [...prev, ...result.data]);
+          setGeneratedVideos((prev) => [...prev, ...result.data]);
         } else {
           // Initial load
           setGeneratedVideos(result.data);

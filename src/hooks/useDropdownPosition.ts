@@ -30,7 +30,10 @@ export function useDropdownPosition({
   maxHeight = 400,
 }: UseDropdownPositionOptions): UseDropdownPositionReturn {
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState<DropdownPosition>({ top: 0, left: 0 });
+  const [position, setPosition] = useState<DropdownPosition>({
+    top: 0,
+    left: 0,
+  });
 
   // Calculate position when dropdown opens
   useEffect(() => {

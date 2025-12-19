@@ -39,7 +39,11 @@ export function NestedDropdown({
 
   // Set active group when dropdown opens with a selected value
   const activeGroupOnOpen = isOpen && currentGroup ? currentGroup.id : null;
-  if (activeGroupOnOpen && activeGroup !== activeGroupOnOpen && activeGroup === null) {
+  if (
+    activeGroupOnOpen &&
+    activeGroup !== activeGroupOnOpen &&
+    activeGroup === null
+  ) {
     setActiveGroup(activeGroupOnOpen);
   }
 
@@ -137,14 +141,19 @@ export function NestedDropdown({
                     {option.badges && option.badges.length > 0 && (
                       <div className="flex flex-wrap gap-1 pt-0.5">
                         {option.badges.map((badge, idx) => {
-                          const badgeData = typeof badge === "string" ? { label: badge } : badge;
+                          const badgeData =
+                            typeof badge === "string"
+                              ? { label: badge }
+                              : badge;
                           return (
                             <span
                               key={idx}
                               className="inline-flex items-center gap-1 rounded bg-zinc-700/80 px-1.5 py-0.5 text-[10px] font-medium text-zinc-300"
                             >
                               {badgeData.icon && (
-                                <span className="size-3 text-zinc-400">{badgeData.icon}</span>
+                                <span className="size-3 text-zinc-400">
+                                  {badgeData.icon}
+                                </span>
                               )}
                               {badgeData.label}
                             </span>

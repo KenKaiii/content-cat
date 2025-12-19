@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth-helpers";
-import { encryptApiKey, decryptApiKey, maskApiKey } from "@/lib/services/apiKeyService";
+import {
+  encryptApiKey,
+  decryptApiKey,
+  maskApiKey,
+} from "@/lib/services/apiKeyService";
 import { logger } from "@/lib/logger";
 
 // GET /api/api-keys - List all API keys (masked)
@@ -56,7 +60,13 @@ export async function POST(request: Request) {
     const apiKey = await prisma.apiKey.upsert({
       where: { userId_service: { userId: user!.id, service } },
       update: { name, key: encryptedKey, isActive: true },
-      create: { userId: user!.id, name, key: encryptedKey, service, isActive: true },
+      create: {
+        userId: user!.id,
+        name,
+        key: encryptedKey,
+        service,
+        isActive: true,
+      },
     });
 
     return NextResponse.json(

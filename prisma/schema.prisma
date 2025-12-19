@@ -95,6 +95,23 @@ model GeneratedVideo {
   @@map("generated_videos")
 }
 
+model Workflow {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  name      String   @default("Untitled Workflow")
+  nodes     Json     @default("[]")
+  edges     Json     @default("[]")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([userId, createdAt])
+  @@map("workflows")
+}
+
 model User {
   id           String    @id @default(uuid())
   email        String    @unique
@@ -111,6 +128,7 @@ model User {
   characters      Character[]
   products        Product[]
   generatedVideos GeneratedVideo[]
+  workflows       Workflow[]
 
   @@map("users")
 }

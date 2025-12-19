@@ -16,7 +16,11 @@ export {
 // Types
 export type { GeneratedVideo } from "./types";
 export type { EditVideoState } from "./constants";
-export { getDefaultEditState, TEXT_POSITIONS, getModelGroups } from "./constants";
+export {
+  getDefaultEditState,
+  TEXT_POSITIONS,
+  getModelGroups,
+} from "./constants";
 
 // Icons
 export * from "./icons";

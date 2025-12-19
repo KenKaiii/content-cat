@@ -22,7 +22,9 @@ export function validatePassword(password: string): PasswordValidationResult {
     if (password.length < MIN_LENGTH_LEGACY) {
       errors.push(`Password must be at least ${MIN_LENGTH_LEGACY} characters`);
     } else {
-      errors.push(`Password should be at least ${MIN_LENGTH} characters for better security`);
+      errors.push(
+        `Password should be at least ${MIN_LENGTH} characters for better security`
+      );
     }
   }
 

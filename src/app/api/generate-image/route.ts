@@ -23,7 +23,10 @@ export async function POST(request: NextRequest) {
 
   // Rate limiting for expensive generation operations
   const clientId = getClientIdentifier(request);
-  const rateLimitResult = await checkRateLimit(clientId, RATE_LIMITS.generation);
+  const rateLimitResult = await checkRateLimit(
+    clientId,
+    RATE_LIMITS.generation
+  );
 
   if (!rateLimitResult.success) {
     return NextResponse.json(

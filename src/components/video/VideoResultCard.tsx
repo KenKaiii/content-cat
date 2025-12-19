@@ -34,7 +34,8 @@ export default function VideoResultCard({
   onAttachImages,
 }: VideoResultCardProps) {
   const [isFavorited, setIsFavorited] = useState(false);
-  const { videoRef, isPlaying, handlePlayPause, handleVideoEnd } = useVideoPlayback();
+  const { videoRef, isPlaying, handlePlayPause, handleVideoEnd } =
+    useVideoPlayback();
 
   const handleFavorite = () => {
     setIsFavorited(!isFavorited);
@@ -54,22 +55,23 @@ export default function VideoResultCard({
 
   return (
     <div
-      className="w-full pl-1 pt-1 animate-in fade-in slide-in-from-bottom-4 duration-500"
+      className="animate-in fade-in slide-in-from-bottom-4 w-full pt-1 pl-1 duration-500"
       style={{ marginBottom: "20px" }}
     >
       <li style={{ listStyle: "none" }}>
         <div
           className="group/card grid items-stretch"
-          style={{ gridTemplateColumns: "1fr minmax(200px, 260px)", gap: "12px" }}
+          style={{
+            gridTemplateColumns: "1fr minmax(200px, 260px)",
+            gap: "12px",
+          }}
         >
           {/* Video Preview Container */}
           <div
-            className="grid auto-rows-[1fr] grid-flow-row-dense gap-2 will-change-auto"
+            className="grid grid-flow-row-dense auto-rows-[1fr] gap-2 will-change-auto"
             style={{ gridTemplateColumns: "1fr" }}
           >
-            <div
-              className="group relative overflow-hidden rounded-2xl bg-zinc-900 transition has-[[aria-selected=true]]:ring-3 has-[[aria-selected=true]]:ring-white"
-            >
+            <div className="group relative overflow-hidden rounded-2xl bg-zinc-900 transition has-[[aria-selected=true]]:ring-3 has-[[aria-selected=true]]:ring-white">
               <figure
                 aria-selected="false"
                 className="group relative z-0 h-full w-full"
@@ -80,7 +82,7 @@ export default function VideoResultCard({
                   ref={videoRef}
                   src={video.url}
                   className={`absolute inset-0 size-full object-contain transition-opacity duration-300 ${
-                    isPlaying ? "opacity-100 z-[1]" : "opacity-0 -z-[1]"
+                    isPlaying ? "z-[1] opacity-100" : "-z-[1] opacity-0"
                   }`}
                   playsInline
                   onEnded={handleVideoEnd}
@@ -92,7 +94,7 @@ export default function VideoResultCard({
                     src={video.thumbnailUrl}
                     alt={`Video: ${video.prompt.slice(0, 50)}`}
                     fill
-                    className={`pointer-events-auto object-contain transition-opacity duration-300 -z-[1] ${
+                    className={`pointer-events-auto -z-[1] object-contain transition-opacity duration-300 ${
                       isPlaying ? "opacity-0" : "opacity-100"
                     }`}
                     sizes="(max-width: 768px) 500px, 1280px"
@@ -101,7 +103,7 @@ export default function VideoResultCard({
                   /* Video as poster when no thumbnail */
                   <video
                     src={video.url}
-                    className={`absolute inset-0 size-full object-contain pointer-events-none transition-opacity duration-300 -z-[1] ${
+                    className={`pointer-events-none absolute inset-0 -z-[1] size-full object-contain transition-opacity duration-300 ${
                       isPlaying ? "opacity-0" : "opacity-100"
                     }`}
                     muted
@@ -112,7 +114,7 @@ export default function VideoResultCard({
 
                 {/* Play/Pause Button - Centered Grid */}
                 <div
-                  className={`size-full grid items-center justify-center transition-opacity duration-200 ${
+                  className={`grid size-full items-center justify-center transition-opacity duration-200 ${
                     isPlaying ? "opacity-0 hover:opacity-100" : "opacity-100"
                   }`}
                 >
@@ -154,12 +156,12 @@ export default function VideoResultCard({
               </figure>
 
               {/* Hover Action Buttons */}
-              <div className="transition group-hover:opacity-100 flex items-center gap-2 absolute top-4 right-4 opacity-0">
+              <div className="absolute top-4 right-4 flex items-center gap-2 opacity-0 transition group-hover:opacity-100">
                 {/* Checkbox */}
                 <button
                   type="button"
                   role="checkbox"
-                  className="p-2 rounded-lg transition-all duration-150 hover:bg-white/10 active:scale-95"
+                  className="rounded-lg p-2 transition-all duration-150 hover:bg-white/10 active:scale-95"
                   aria-checked="false"
                   data-state="closed"
                 >
@@ -171,7 +173,7 @@ export default function VideoResultCard({
                   type="button"
                   data-state="closed"
                   aria-busy="false"
-                  className="p-2 rounded-lg flex items-center justify-center text-white/90 transition-all duration-150 hover:text-white hover:bg-white/10 active:scale-95 [&_path]:stroke-2"
+                  className="flex items-center justify-center rounded-lg p-2 text-white/90 transition-all duration-150 hover:bg-white/10 hover:text-white active:scale-95 [&_path]:stroke-2"
                 >
                   <svg
                     className="size-4"
@@ -208,11 +210,18 @@ export default function VideoResultCard({
                   data-state="closed"
                   aria-checked={isFavorited}
                   onClick={handleFavorite}
-                  className={`p-2 rounded-lg flex items-center justify-center transition-all duration-150 hover:bg-white/10 active:scale-95 [&_path]:stroke-2 ${
-                    isFavorited ? "text-red-500 hover:text-red-400" : "text-white/90 hover:text-white"
+                  className={`flex items-center justify-center rounded-lg p-2 transition-all duration-150 hover:bg-white/10 active:scale-95 [&_path]:stroke-2 ${
+                    isFavorited
+                      ? "text-red-500 hover:text-red-400"
+                      : "text-white/90 hover:text-white"
                   }`}
                 >
-                  <svg className="size-4" aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                  <svg
+                    className="size-4"
+                    aria-hidden="true"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
                     <path
                       d="M12 5.57193C18.3331 -0.86765 29.1898 11.0916 12 20.75C-5.18982 11.0916 5.66687 -0.867651 12 5.57193Z"
                       stroke="currentColor"
@@ -227,9 +236,14 @@ export default function VideoResultCard({
                 <button
                   type="button"
                   data-state="closed"
-                  className="p-2 rounded-lg flex items-center justify-center text-white/90 transition-all duration-150 hover:text-white hover:bg-white/10 active:scale-95 [&_path]:stroke-2"
+                  className="flex items-center justify-center rounded-lg p-2 text-white/90 transition-all duration-150 hover:bg-white/10 hover:text-white active:scale-95 [&_path]:stroke-2"
                 >
-                  <svg className="size-4" aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                  <svg
+                    className="size-4"
+                    aria-hidden="true"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
                     <path
                       d="M12 19.25V13M12 13L14.5 15.5M12 13L9.5 15.5M7.375 19.25H3.75C3.19772 19.25 2.75 18.8023 2.75 18.25V4.75C2.75 4.19772 3.19772 3.75 3.75 3.75H9.46482C9.79917 3.75 10.1114 3.9171 10.2969 4.1953L11.7031 6.3047C11.8886 6.5829 12.2008 6.75 12.5352 6.75H20.25C20.8023 6.75 21.25 7.19772 21.25 7.75V18.25C21.25 18.8023 20.8023 19.25 20.25 19.25H16.625"
                       stroke="currentColor"
@@ -245,9 +259,14 @@ export default function VideoResultCard({
                   type="button"
                   data-state="closed"
                   onClick={onDownload}
-                  className="p-2 rounded-lg flex items-center justify-center text-white/90 transition-all duration-150 hover:text-white hover:bg-white/10 active:scale-95 [&_path]:stroke-2"
+                  className="flex items-center justify-center rounded-lg p-2 text-white/90 transition-all duration-150 hover:bg-white/10 hover:text-white active:scale-95 [&_path]:stroke-2"
                 >
-                  <svg className="size-4" aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                  <svg
+                    className="size-4"
+                    aria-hidden="true"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
                     <path
                       d="M20.25 14.75V19.25C20.25 19.8023 19.8023 20.25 19.25 20.25H4.75C4.19772 20.25 3.75 19.8023 3.75 19.25V14.75M12 15V3.75M12 15L8.5 11.5M12 15L15.5 11.5"
                       stroke="currentColor"
@@ -262,9 +281,14 @@ export default function VideoResultCard({
                 <button
                   type="button"
                   data-state="closed"
-                  className="p-2 rounded-lg flex items-center justify-center text-white/90 transition-all duration-150 hover:text-white hover:bg-white/10 active:scale-95 [&_path]:stroke-2"
+                  className="flex items-center justify-center rounded-lg p-2 text-white/90 transition-all duration-150 hover:bg-white/10 hover:text-white active:scale-95 [&_path]:stroke-2"
                 >
-                  <svg className="size-4" aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                  <svg
+                    className="size-4"
+                    aria-hidden="true"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
                     <path
                       d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z"
                       fill="currentColor"
@@ -296,9 +320,9 @@ export default function VideoResultCard({
           </div>
 
           {/* Action Panel / Info Section */}
-          <div id="action-panel" className="will-change-auto min-w-60">
+          <div id="action-panel" className="min-w-60 will-change-auto">
             <div
-              className="relative grid gap-3 justify-items-start h-full content-start bg-zinc-950 p-4 pb-14 border border-zinc-800/50 rounded-2xl"
+              className="relative grid h-full content-start justify-items-start gap-3 rounded-2xl border border-zinc-800/50 bg-zinc-950 p-4 pb-14"
               style={{ minHeight: "100%" }}
             >
               {/* Model Badge */}
@@ -313,9 +337,9 @@ export default function VideoResultCard({
               </div>
 
               {/* Prompt Text */}
-              <div className="group flex items-start text-sm text-zinc-400 flex-1 min-w-0">
-                <div className="group select-none hide-scrollbar overflow-y-scroll text-zinc-400 hover:text-zinc-200 max-h-15 lg:max-h-40 py-0 lg:py-2 lg:-mx-3 lg:px-3 lg:rounded-lg focus-visible:ring focus-visible:ring-white focus-visible:bg-black hover:bg-black duration-0 gap-2 flex flex-col">
-                  <p className="text-sm min-w-0 flex-1 cursor-copy break-words break-all whitespace-pre-wrap">
+              <div className="group flex min-w-0 flex-1 items-start text-sm text-zinc-400">
+                <div className="group hide-scrollbar flex max-h-15 flex-col gap-2 overflow-y-scroll py-0 text-zinc-400 duration-0 select-none hover:bg-black hover:text-zinc-200 focus-visible:bg-black focus-visible:ring focus-visible:ring-white lg:-mx-3 lg:max-h-40 lg:rounded-lg lg:px-3 lg:py-2">
+                  <p className="min-w-0 flex-1 cursor-copy text-sm break-words break-all whitespace-pre-wrap">
                     {video.prompt}
                   </p>
                 </div>
@@ -327,7 +351,7 @@ export default function VideoResultCard({
                 {video.motionVideoUrl && (
                   <button
                     type="button"
-                    className="select-none group outline-none cursor-pointer rounded-md lg:rounded-lg overflow-hidden duration-150 -rotate-[5deg] hover:rotate-0 hover:scale-125 focus-visible:scale-125 focus-visible:ring-2 focus-visible:ring-white active:scale-115 size-6 lg:size-10 relative"
+                    className="group relative size-6 -rotate-[5deg] cursor-pointer overflow-hidden rounded-md duration-150 outline-none select-none hover:scale-125 hover:rotate-0 focus-visible:scale-125 focus-visible:ring-2 focus-visible:ring-white active:scale-115 lg:size-10 lg:rounded-lg"
                   >
                     <video
                       loop
@@ -335,9 +359,9 @@ export default function VideoResultCard({
                       disablePictureInPicture
                       preload="none"
                       src={video.motionVideoUrl}
-                      className="object-cover size-full"
+                      className="size-full object-cover"
                     />
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 flex justify-center items-center transition-opacity duration-200 bg-black/50">
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                       <svg
                         width="16"
                         height="16"
@@ -361,7 +385,7 @@ export default function VideoResultCard({
                     type="button"
                     onClick={() => handleAttachImage(video.startImageUrl!)}
                     title="Click to use this image"
-                    className="select-none group outline-none cursor-pointer rounded-md lg:rounded-lg overflow-hidden duration-150 rotate-[5deg] hover:rotate-0 hover:scale-125 focus-visible:scale-125 focus-visible:ring-2 focus-visible:ring-white active:scale-115 size-6 lg:size-10 relative"
+                    className="group relative size-6 rotate-[5deg] cursor-pointer overflow-hidden rounded-md duration-150 outline-none select-none hover:scale-125 hover:rotate-0 focus-visible:scale-125 focus-visible:ring-2 focus-visible:ring-white active:scale-115 lg:size-10 lg:rounded-lg"
                   >
                     <Image
                       src={video.startImageUrl}
@@ -369,7 +393,7 @@ export default function VideoResultCard({
                       fill
                       className="object-cover"
                     />
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 flex justify-center items-center transition-opacity duration-200 bg-black/50">
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                       <svg
                         width="16"
                         height="16"
@@ -393,7 +417,7 @@ export default function VideoResultCard({
                     type="button"
                     onClick={() => handleAttachImage(video.endImageUrl!)}
                     title="Click to use this image"
-                    className="select-none group outline-none cursor-pointer rounded-md lg:rounded-lg overflow-hidden duration-150 -rotate-[5deg] hover:rotate-0 hover:scale-125 focus-visible:scale-125 focus-visible:ring-2 focus-visible:ring-white active:scale-115 size-6 lg:size-10 relative"
+                    className="group relative size-6 -rotate-[5deg] cursor-pointer overflow-hidden rounded-md duration-150 outline-none select-none hover:scale-125 hover:rotate-0 focus-visible:scale-125 focus-visible:ring-2 focus-visible:ring-white active:scale-115 lg:size-10 lg:rounded-lg"
                   >
                     <Image
                       src={video.endImageUrl}
@@ -401,7 +425,7 @@ export default function VideoResultCard({
                       fill
                       className="object-cover"
                     />
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 flex justify-center items-center transition-opacity duration-200 bg-black/50">
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                       <svg
                         width="16"
                         height="16"
@@ -426,7 +450,7 @@ export default function VideoResultCard({
                 <button
                   type="button"
                   role="presentation"
-                  className="flex items-center gap-1 py-1 pl-1.5 pr-2.5 rounded-lg bg-zinc-800 text-xs font-semibold text-white cursor-default hover:opacity-100 hover:brightness-100 hover:bg-zinc-800"
+                  className="flex cursor-default items-center gap-1 rounded-lg bg-zinc-800 py-1 pr-2.5 pl-1.5 text-xs font-semibold text-white hover:bg-zinc-800 hover:opacity-100 hover:brightness-100"
                 >
                   <span className="size-3.5 text-zinc-500">
                     <ResolutionIcon />
@@ -438,7 +462,7 @@ export default function VideoResultCard({
                 <button
                   type="button"
                   role="presentation"
-                  className="flex items-center gap-1 py-1 pl-1.5 pr-2.5 rounded-lg bg-zinc-800 text-xs font-semibold text-white cursor-default hover:opacity-100 hover:brightness-100 hover:bg-zinc-800"
+                  className="flex cursor-default items-center gap-1 rounded-lg bg-zinc-800 py-1 pr-2.5 pl-1.5 text-xs font-semibold text-white hover:bg-zinc-800 hover:opacity-100 hover:brightness-100"
                 >
                   <span className="size-3.5 text-zinc-500">
                     <ClockIcon />
@@ -453,12 +477,12 @@ export default function VideoResultCard({
               </span>
 
               {/* Bottom Action Buttons - shows on hover */}
-              <div className="absolute bottom-4 left-4 flex w-[calc(100%-2rem)] items-center justify-between transition-opacity duration-400 opacity-0 group-hover/card:opacity-100 hover:!opacity-100">
+              <div className="absolute bottom-4 left-4 flex w-[calc(100%-2rem)] items-center justify-between opacity-0 transition-opacity duration-400 group-hover/card:opacity-100 hover:!opacity-100">
                 {/* Rerun Button */}
                 <button
                   type="button"
                   onClick={onRerun}
-                  className="flex gap-1 cursor-pointer py-1 px-1.5 items-center justify-center text-white/70 transition hover:text-white"
+                  className="flex cursor-pointer items-center justify-center gap-1 px-1.5 py-1 text-white/70 transition hover:text-white"
                 >
                   <svg
                     className="[&_path]:stroke-[3px]"

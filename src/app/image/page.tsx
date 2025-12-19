@@ -44,7 +44,7 @@ function ImagePageContent() {
   const initialSubModel = initialCharacterId || initialProductId || undefined;
   const [pendingCount, setPendingCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [generatedImages, setGeneratedImages] = useState<GeneratedImage[]>([])
+  const [generatedImages, setGeneratedImages] = useState<GeneratedImage[]>([]);
   const [selectedImages, setSelectedImages] = useState<Set<string>>(new Set());
   const [selectedImage, setSelectedImage] = useState<GeneratedImage | null>(
     null
@@ -69,7 +69,7 @@ function ImagePageContent() {
         const result = await response.json();
         if (cursor) {
           // Append to existing images
-          setGeneratedImages(prev => [...prev, ...result.data]);
+          setGeneratedImages((prev) => [...prev, ...result.data]);
         } else {
           // Initial load
           setGeneratedImages(result.data);
@@ -225,7 +225,9 @@ function ImagePageContent() {
           setPendingCount((prev) => Math.max(0, prev - 1));
         } catch (err) {
           toast.error(
-            err instanceof Error ? err.message : "Something went wrong. Try again."
+            err instanceof Error
+              ? err.message
+              : "Something went wrong. Try again."
           );
           // Decrement pending count for this failed generation
           setPendingCount((prev) => Math.max(0, prev - 1));
@@ -233,7 +235,9 @@ function ImagePageContent() {
       }
 
       if (successCount > 0) {
-        toast.success(`Generated ${successCount} image${successCount > 1 ? 's' : ''}`);
+        toast.success(
+          `Generated ${successCount} image${successCount > 1 ? "s" : ""}`
+        );
       }
     };
 
@@ -256,59 +260,57 @@ function ImagePageContent() {
           id="soul-feed-scroll"
           className="hide-scrollbar min-h-0 flex-1 overflow-y-auto pb-48"
         >
-            {/* Loading state */}
-            {isLoading && (
-              <div className="flex h-full w-full items-center justify-center">
-                <div className="flex flex-col items-center gap-3">
-                  <div className="size-8 animate-spin rounded-full border-2 border-zinc-600 border-t-white" />
-                  <span className="text-sm text-zinc-400">
-                    Loading images...
-                  </span>
-                </div>
+          {/* Loading state */}
+          {isLoading && (
+            <div className="flex h-full w-full items-center justify-center">
+              <div className="flex flex-col items-center gap-3">
+                <div className="size-8 animate-spin rounded-full border-2 border-zinc-600 border-t-white" />
+                <span className="text-sm text-zinc-400">Loading images...</span>
               </div>
-            )}
+            </div>
+          )}
 
-            {/* Generated Images Display */}
-            {!isLoading && (generatedImages.length > 0 || pendingCount > 0) ? (
-              <>
-                <div
-                  className="grid w-full grid-cols-2 gap-1.5 md:grid-cols-4"
-                  style={{ gridAutoRows: "320px" }}
-                >
-                  {/* Skeleton loaders while generating */}
-                  {pendingCount > 0 && <ImageGridSkeleton count={pendingCount} />}
+          {/* Generated Images Display */}
+          {!isLoading && (generatedImages.length > 0 || pendingCount > 0) ? (
+            <>
+              <div
+                className="grid w-full grid-cols-2 gap-1.5 md:grid-cols-4"
+                style={{ gridAutoRows: "320px" }}
+              >
+                {/* Skeleton loaders while generating */}
+                {pendingCount > 0 && <ImageGridSkeleton count={pendingCount} />}
 
-                  {/* Generated images */}
-                  {generatedImages.map((img, index) => (
-                    <ImageCard
-                      key={img.id}
-                      image={img}
-                      isSelected={selectedImages.has(img.id)}
-                      isPriority={index < 4}
-                      onSelect={() => toggleSelectImage(img.id)}
-                      onClick={() => setSelectedImage(img)}
-                      onDownload={() => handleDownload(img.url, img.prompt)}
-                      onDelete={() => handleDelete(img.id)}
-                      onEdit={() => setEditData({ imageUrl: img.url })}
-                    />
-                  ))}
+                {/* Generated images */}
+                {generatedImages.map((img, index) => (
+                  <ImageCard
+                    key={img.id}
+                    image={img}
+                    isSelected={selectedImages.has(img.id)}
+                    isPriority={index < 4}
+                    onSelect={() => toggleSelectImage(img.id)}
+                    onClick={() => setSelectedImage(img)}
+                    onDownload={() => handleDownload(img.url, img.prompt)}
+                    onDelete={() => handleDelete(img.id)}
+                    onEdit={() => setEditData({ imageUrl: img.url })}
+                  />
+                ))}
+              </div>
+              {/* Load more trigger */}
+              {hasMore && (
+                <div className="flex justify-center py-8">
+                  <button
+                    onClick={loadMoreImages}
+                    disabled={isLoadingMore}
+                    className="rounded-lg bg-zinc-800 px-6 py-2 text-sm text-zinc-300 hover:bg-zinc-700 disabled:opacity-50"
+                  >
+                    {isLoadingMore ? "Loading..." : "Load More"}
+                  </button>
                 </div>
-                {/* Load more trigger */}
-                {hasMore && (
-                  <div className="flex justify-center py-8">
-                    <button
-                      onClick={loadMoreImages}
-                      disabled={isLoadingMore}
-                      className="rounded-lg bg-zinc-800 px-6 py-2 text-sm text-zinc-300 hover:bg-zinc-700 disabled:opacity-50"
-                    >
-                      {isLoadingMore ? "Loading..." : "Load More"}
-                    </button>
-                  </div>
-                )}
-              </>
-            ) : !isLoading ? (
-              <ImageEmptyState />
-            ) : null}
+              )}
+            </>
+          ) : !isLoading ? (
+            <ImageEmptyState />
+          ) : null}
         </div>
       </div>
 

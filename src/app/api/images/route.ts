@@ -16,7 +16,8 @@ export async function GET(request: Request) {
     const cursor = searchParams.get("cursor");
     const limitParam = searchParams.get("limit");
     const limit = Math.min(
-      parseInt(limitParam || String(DEFAULT_PAGE_SIZE), 10) || DEFAULT_PAGE_SIZE,
+      parseInt(limitParam || String(DEFAULT_PAGE_SIZE), 10) ||
+        DEFAULT_PAGE_SIZE,
       MAX_PAGE_SIZE
     );
 

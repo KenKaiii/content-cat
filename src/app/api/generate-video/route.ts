@@ -24,7 +24,10 @@ export async function POST(request: NextRequest) {
 
   // Rate limiting for expensive generation operations
   const clientId = getClientIdentifier(request);
-  const rateLimitResult = await checkRateLimit(clientId, RATE_LIMITS.generation);
+  const rateLimitResult = await checkRateLimit(
+    clientId,
+    RATE_LIMITS.generation
+  );
 
   if (!rateLimitResult.success) {
     return NextResponse.json(
@@ -89,7 +92,10 @@ export async function POST(request: NextRequest) {
     });
 
     // Generate video with timeout protection
-    const generateVideo = async (): Promise<{ video: { url: string }; seed?: number }> => {
+    const generateVideo = async (): Promise<{
+      video: { url: string };
+      seed?: number;
+    }> => {
       switch (modelId) {
         case "kling-2.6": {
           const client = createKling26Client(apiKey);
@@ -155,7 +161,12 @@ export async function POST(request: NextRequest) {
           } else {
             return client.generateTextToVideo({
               prompt,
-              aspect_ratio: aspectRatio as "16:9" | "9:16" | "1:1" | "4:3" | "3:4",
+              aspect_ratio: aspectRatio as
+                | "16:9"
+                | "9:16"
+                | "1:1"
+                | "4:3"
+                | "3:4",
               duration: duration as "5" | "10" | "15",
               resolution: resolution as "720p" | "1080p",
               enable_prompt_expansion: enhanceEnabled ?? false,

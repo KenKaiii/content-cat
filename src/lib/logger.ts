@@ -68,9 +68,7 @@ function formatLogEntry(entry: LogEntry): string {
     return JSON.stringify(entry);
   }
   // Human-readable format for development
-  const contextStr = entry.context
-    ? ` ${JSON.stringify(entry.context)}`
-    : "";
+  const contextStr = entry.context ? ` ${JSON.stringify(entry.context)}` : "";
   return `[${entry.timestamp}] ${entry.level.toUpperCase()}: ${entry.message}${contextStr}`;
 }
 
@@ -104,10 +102,14 @@ function log(level: LogLevel, message: string, context?: LogContext): void {
 }
 
 export const logger = {
-  debug: (message: string, context?: LogContext) => log("debug", message, context),
-  info: (message: string, context?: LogContext) => log("info", message, context),
-  warn: (message: string, context?: LogContext) => log("warn", message, context),
-  error: (message: string, context?: LogContext) => log("error", message, context),
+  debug: (message: string, context?: LogContext) =>
+    log("debug", message, context),
+  info: (message: string, context?: LogContext) =>
+    log("info", message, context),
+  warn: (message: string, context?: LogContext) =>
+    log("warn", message, context),
+  error: (message: string, context?: LogContext) =>
+    log("error", message, context),
 };
 
 export default logger;

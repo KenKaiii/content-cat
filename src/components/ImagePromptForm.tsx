@@ -24,7 +24,11 @@ import {
   MAX_IMAGES_PER_GENERATION,
 } from "@/lib/constants/image-form";
 import { compressImage } from "@/lib/utils/image-compression";
-import type { SavedCharacter, SavedProduct, ReferenceImage } from "@/types/entities";
+import type {
+  SavedCharacter,
+  SavedProduct,
+  ReferenceImage,
+} from "@/types/entities";
 
 interface ImagePromptFormProps {
   onSubmit?: (data: {
@@ -151,7 +155,14 @@ export default function ImagePromptForm({
       return [...charImages, ...prodImages];
     }
     return [];
-  }, [model, subModel, ugcCharacter, ugcProduct, savedCharacters, savedProducts]);
+  }, [
+    model,
+    subModel,
+    ugcCharacter,
+    ugcProduct,
+    savedCharacters,
+    savedProducts,
+  ]);
 
   // Handle initial model/subModel from URL params
   useEffect(() => {
@@ -434,7 +445,7 @@ export default function ImagePromptForm({
                   }
                 }
               }}
-              className="hide-scrollbar min-h-[40px] max-h-[120px] w-full resize-none rounded-none border-none bg-transparent p-0 text-[15px] text-white placeholder:text-gray-500 focus:outline-none"
+              className="hide-scrollbar max-h-[120px] min-h-[40px] w-full resize-none rounded-none border-none bg-transparent p-0 text-[15px] text-white placeholder:text-gray-500 focus:outline-none"
             />
           </div>
 
@@ -489,7 +500,10 @@ export default function ImagePromptForm({
               <>
                 {characterOptions.length > 0 ? (
                   <SelectDropdown
-                    options={[{ value: "", label: "Character" }, ...characterOptions]}
+                    options={[
+                      { value: "", label: "Character" },
+                      ...characterOptions,
+                    ]}
                     value={ugcCharacter}
                     onChange={setUgcCharacter}
                   />
@@ -503,7 +517,10 @@ export default function ImagePromptForm({
                 )}
                 {productOptions.length > 0 ? (
                   <SelectDropdown
-                    options={[{ value: "", label: "Product" }, ...productOptions]}
+                    options={[
+                      { value: "", label: "Product" },
+                      ...productOptions,
+                    ]}
                     value={ugcProduct}
                     onChange={setUgcProduct}
                   />

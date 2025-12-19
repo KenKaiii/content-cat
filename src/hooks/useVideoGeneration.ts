@@ -51,7 +51,9 @@ export function useVideoGeneration(options: UseVideoGenerationOptions = {}) {
       const oldConfig = getModelConfig(videoState.model);
 
       // Reset start/end frames when switching between frame support models
-      if (oldConfig.supportsStartEndFrames !== newConfig.supportsStartEndFrames) {
+      if (
+        oldConfig.supportsStartEndFrames !== newConfig.supportsStartEndFrames
+      ) {
         callbacks?.onStartEndFrameReset?.();
       }
 
@@ -59,9 +61,13 @@ export function useVideoGeneration(options: UseVideoGenerationOptions = {}) {
         ...getDefaultState(modelId),
         prompt: videoState.prompt,
         // Only preserve imageUrl if the new model doesn't support start/end frames
-        imageUrl: newConfig.supportsStartEndFrames ? undefined : videoState.imageUrl,
+        imageUrl: newConfig.supportsStartEndFrames
+          ? undefined
+          : videoState.imageUrl,
         endImageUrl: undefined, // Always reset end image when switching models
-        mode: newConfig.supportsStartEndFrames ? "text-to-video" : videoState.mode,
+        mode: newConfig.supportsStartEndFrames
+          ? "text-to-video"
+          : videoState.mode,
       });
     },
     [videoState.prompt, videoState.imageUrl, videoState.mode, videoState.model]

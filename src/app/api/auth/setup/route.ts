@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createUser } from "@/lib/auth";
-import { validatePassword, getPasswordRequirements } from "@/lib/password-validation";
+import {
+  validatePassword,
+  getPasswordRequirements,
+} from "@/lib/password-validation";
 import { logger } from "@/lib/logger";
 
 /**

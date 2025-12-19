@@ -40,14 +40,22 @@ export function Dropdown({
               onClose();
             }}
             className={`flex w-full items-center gap-3 rounded-xl p-2 text-left transition-colors outline-none hover:bg-white/5 ${
-              value === option.id ? "bg-cyan-400/10 ring-1 ring-cyan-400/30" : ""
+              value === option.id
+                ? "bg-cyan-400/10 ring-1 ring-cyan-400/30"
+                : ""
             }`}
           >
             {option.icon && (
-              <div className={`flex size-10 shrink-0 items-center justify-center rounded-xl ${
-                value === option.id ? "bg-cyan-400/20" : "bg-zinc-700"
-              }`}>
-                <div className={`size-5 ${value === option.id ? "text-cyan-400" : "text-white"}`}>{option.icon}</div>
+              <div
+                className={`flex size-10 shrink-0 items-center justify-center rounded-xl ${
+                  value === option.id ? "bg-cyan-400/20" : "bg-zinc-700"
+                }`}
+              >
+                <div
+                  className={`size-5 ${value === option.id ? "text-cyan-400" : "text-white"}`}
+                >
+                  {option.icon}
+                </div>
               </div>
             )}
             <div className="flex min-w-0 flex-1 flex-col gap-0.5 text-left">

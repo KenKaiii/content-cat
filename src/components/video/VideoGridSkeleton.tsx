@@ -10,16 +10,19 @@ export default function VideoGridSkeleton({ count }: VideoGridSkeletonProps) {
       {Array.from({ length: count }).map((_, index) => (
         <div
           key={`video-skeleton-${index}`}
-          className="w-full pl-1 pt-1 animate-in fade-in duration-500"
+          className="animate-in fade-in w-full pt-1 pl-1 duration-500"
           style={{ marginBottom: "20px" }}
         >
           <div
             className="grid items-stretch"
-            style={{ gridTemplateColumns: "1fr minmax(200px, 260px)", gap: "12px" }}
+            style={{
+              gridTemplateColumns: "1fr minmax(200px, 260px)",
+              gap: "12px",
+            }}
           >
             {/* Video Preview Skeleton */}
             <div
-              className="grid auto-rows-[1fr] grid-flow-row-dense gap-2"
+              className="grid grid-flow-row-dense auto-rows-[1fr] gap-2"
               style={{ gridTemplateColumns: "1fr" }}
             >
               <div className="skeleton-loader relative overflow-hidden rounded-2xl bg-zinc-900">
@@ -53,7 +56,7 @@ export default function VideoGridSkeleton({ count }: VideoGridSkeletonProps) {
             </div>
 
             {/* Action Panel Skeleton */}
-            <div id="action-panel" className="will-change-auto min-w-0">
+            <div id="action-panel" className="min-w-0 will-change-auto">
               <div className="relative grid h-full content-start justify-items-start gap-3 rounded-2xl border border-zinc-800/50 bg-zinc-950 p-4 pb-14">
                 {/* Model Badge Skeleton */}
                 <div className="flex items-center gap-2">
@@ -61,15 +64,15 @@ export default function VideoGridSkeleton({ count }: VideoGridSkeletonProps) {
                 </div>
 
                 {/* Prompt Text Skeleton */}
-                <div className="flex flex-col gap-2 w-full">
+                <div className="flex w-full flex-col gap-2">
                   <div className="h-4 w-full animate-pulse rounded bg-zinc-800" />
                   <div className="h-4 w-3/4 animate-pulse rounded bg-zinc-800" />
                 </div>
 
                 {/* Thumbnail Placeholders Skeleton */}
                 <div className="flex flex-wrap gap-2">
-                  <div className="size-6 lg:size-10 animate-pulse rounded-lg bg-zinc-800 rotate-[5deg]" />
-                  <div className="size-6 lg:size-10 animate-pulse rounded-lg bg-zinc-800 -rotate-[5deg]" />
+                  <div className="size-6 rotate-[5deg] animate-pulse rounded-lg bg-zinc-800 lg:size-10" />
+                  <div className="size-6 -rotate-[5deg] animate-pulse rounded-lg bg-zinc-800 lg:size-10" />
                 </div>
 
                 {/* Settings Badges Skeleton */}

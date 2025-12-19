@@ -7,6 +7,7 @@ import ApiKeysModal from "./ApiKeysModal";
 const navItems = [
   { label: "Image", href: "/image" },
   { label: "Video", href: "/video" },
+  { label: "Workflow", href: "/workflow" },
   { label: "Characters", href: "/create-character" },
   { label: "Products", href: "/products" },
   { label: "Prompts", href: "/prompts" },

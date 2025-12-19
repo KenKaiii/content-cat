@@ -29,7 +29,11 @@ export const ChevronDownIcon = () => (
   </svg>
 );
 
-export const SparkleIcon = ({ className = "h-4 w-4" }: { className?: string }) => (
+export const SparkleIcon = ({
+  className = "h-4 w-4",
+}: {
+  className?: string;
+}) => (
   <svg width="20" height="20" viewBox="0 0 20 20" className={className}>
     <path
       d="M11.8525 4.21651L11.7221 3.2387C11.6906 3.00226 11.4889 2.82568 11.2504 2.82568C11.0118 2.82568 10.8102 3.00226 10.7786 3.23869L10.6483 4.21651C10.2658 7.0847 8.00939 9.34115 5.14119 9.72358L4.16338 9.85396C3.92694 9.88549 3.75037 10.0872 3.75037 10.3257C3.75037 10.5642 3.92694 10.7659 4.16338 10.7974L5.14119 10.9278C8.00938 11.3102 10.2658 13.5667 10.6483 16.4349L10.7786 17.4127C10.8102 17.6491 11.0118 17.8257 11.2504 17.8257C11.4889 17.8257 11.6906 17.6491 11.7221 17.4127L11.8525 16.4349C12.2349 13.5667 14.4913 11.3102 17.3595 10.9278L18.3374 10.7974C18.5738 10.7659 18.7504 10.5642 18.7504 10.3257C18.7504 10.0872 18.5738 9.88549 18.3374 9.85396L17.3595 9.72358C14.4913 9.34115 12.2349 7.0847 11.8525 4.21651Z"
@@ -51,7 +55,11 @@ export const AutoIcon = () => (
   </svg>
 );
 
-export const CheckIcon = ({ className = "h-4 w-4 text-gray-400" }: { className?: string }) => (
+export const CheckIcon = ({
+  className = "h-4 w-4 text-gray-400",
+}: {
+  className?: string;
+}) => (
   <svg width="24" height="24" viewBox="0 0 24 24" className={className}>
     <path
       fillRule="evenodd"
@@ -62,7 +70,11 @@ export const CheckIcon = ({ className = "h-4 w-4 text-gray-400" }: { className?:
   </svg>
 );
 
-export const CloseIcon = ({ className = "h-3.5 w-3.5" }: { className?: string }) => (
+export const CloseIcon = ({
+  className = "h-3.5 w-3.5",
+}: {
+  className?: string;
+}) => (
   <svg width="20" height="20" viewBox="0 0 20 20" className={className}>
     <path
       fillRule="evenodd"
@@ -84,7 +96,11 @@ export const EditIcon = ({ className = "size-4" }: { className?: string }) => (
   </svg>
 );
 
-export const DeleteIcon = ({ className = "size-4" }: { className?: string }) => (
+export const DeleteIcon = ({
+  className = "size-4",
+}: {
+  className?: string;
+}) => (
   <svg width="16" height="16" viewBox="0 0 20 20" className={className}>
     <path
       fillRule="evenodd"
@@ -95,7 +111,11 @@ export const DeleteIcon = ({ className = "size-4" }: { className?: string }) => 
   </svg>
 );
 
-export const ImageAddIcon = ({ className = "size-4" }: { className?: string }) => (
+export const ImageAddIcon = ({
+  className = "size-4",
+}: {
+  className?: string;
+}) => (
   <svg width="16" height="16" viewBox="0 0 16 16" className={className}>
     <path
       d="M9.33301 1.16699C9.60915 1.16699 9.83301 1.39085 9.83301 1.66699C9.83283 1.94299 9.60904 2.16699 9.33301 2.16699H4.33301C3.13654 2.16717 2.16602 3.13748 2.16602 4.33398V11.667L2.17773 11.8887C2.28233 12.9164 3.10552 13.7304 4.13672 13.8232L8.89844 9.06055C9.87476 8.08439 11.4583 8.08429 12.4346 9.06055L13.833 10.459V6.66699C13.833 6.39096 14.057 6.16717 14.333 6.16699C14.6091 6.16699 14.833 6.39085 14.833 6.66699V11.667C14.8328 13.4157 13.4148 14.834 11.666 14.834H4.33301C2.63906 14.8338 1.25593 13.5029 1.1709 11.8301L1.16602 11.667V4.33398C1.16602 2.58519 2.58425 1.16717 4.33301 1.16699H9.33301ZM11.7266 9.76855C11.1408 9.18277 10.1913 9.18277 9.60547 9.76855L5.54004 13.834H11.666C12.796 13.834 13.7244 12.9683 13.8242 11.8643L11.7266 9.76855ZM6.33301 4.5C7.34553 4.5 8.16602 5.32146 8.16602 6.33398C8.16567 7.34621 7.34531 8.16699 6.33301 8.16699C5.32085 8.16682 4.50035 7.3461 4.5 6.33398C4.5 5.32157 5.32063 4.50017 6.33301 4.5ZM6.33301 5.5C5.87292 5.50017 5.5 5.87385 5.5 6.33398C5.50035 6.79382 5.87313 7.16682 6.33301 7.16699C6.79303 7.16699 7.16567 6.79392 7.16602 6.33398C7.16602 5.87375 6.79325 5.5 6.33301 5.5ZM13 0.166992C13.276 0.167168 13.5 0.390958 13.5 0.666992V2.5H15.333C15.609 2.5 15.8328 2.72401 15.833 3C15.8328 3.27599 15.609 3.5 15.333 3.5H13.5V5.33398C13.4997 5.60972 13.2758 5.83381 13 5.83398C12.7242 5.83381 12.5003 5.60972 12.5 5.33398V3.5H10.666C10.3903 3.49965 10.1662 3.27578 10.166 3C10.1662 2.72422 10.3903 2.50035 10.666 2.5H12.5V0.666992C12.5 0.390957 12.724 0.167166 13 0.166992Z"
@@ -124,7 +144,12 @@ export const FormatIcon = () => (
 
 // Aspect ratio icons
 export const AspectRatioIcon1x1 = () => (
-  <svg width="16" height="16" viewBox="0 0 16 16" className="h-5 w-5 text-white">
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    className="h-5 w-5 text-white"
+  >
     <path
       d="M10.5 3C11.8807 3 13 4.11929 13 5.5V10.5C13 11.8807 11.8807 13 10.5 13H5.5C4.11929 13 3 11.8807 3 10.5V5.5C3 4.11929 4.11929 3 5.5 3H10.5ZM5.5 4C4.67157 4 4 4.67157 4 5.5V10.5C4 11.3284 4.67157 12 5.5 12H10.5C11.3284 12 12 11.3284 12 10.5V5.5C12 4.67157 11.3284 4 10.5 4H5.5Z"
       fill="currentColor"
@@ -133,7 +158,12 @@ export const AspectRatioIcon1x1 = () => (
 );
 
 export const AspectRatioIcon4x3 = () => (
-  <svg width="16" height="16" viewBox="0 0 16 16" className="h-5 w-5 text-white">
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    className="h-5 w-5 text-white"
+  >
     <path
       d="M12.5 3C13.8807 3 15 4.11929 15 5.5V11.5C15 12.8807 13.8807 14 12.5 14H3.5C2.11929 14 1 12.8807 1 11.5V5.5C1 4.11929 2.11929 3 3.5 3H12.5ZM3.5 4C2.67157 4 2 4.67157 2 5.5V11.5C2 12.3284 2.67157 13 3.5 13H12.5C13.3284 13 14 12.3284 14 11.5V5.5C14 4.67157 13.3284 4 12.5 4H3.5Z"
       fill="currentColor"
@@ -142,7 +172,12 @@ export const AspectRatioIcon4x3 = () => (
 );
 
 export const AspectRatioIcon16x9 = () => (
-  <svg width="16" height="16" viewBox="0 0 16 16" className="h-5 w-5 text-white">
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    className="h-5 w-5 text-white"
+  >
     <path
       d="M13.833 3.5C14.8454 3.5 15.6658 4.32064 15.666 5.33301V10.667C15.6658 11.6794 14.8454 12.5 13.833 12.5H3.16602C2.1539 12.4996 1.33318 11.6791 1.33301 10.667V5.33301C1.33318 4.32085 2.1539 3.50035 3.16602 3.5H13.833ZM3.16602 4.5C2.70619 4.50035 2.33318 4.87314 2.33301 5.33301V10.667C2.33318 11.1269 2.70619 11.4996 3.16602 11.5H13.833C14.2931 11.5 14.6658 11.1271 14.666 10.667V5.33301C14.6658 4.87292 14.2931 4.5 13.833 4.5H3.16602Z"
       fill="currentColor"
@@ -151,7 +186,12 @@ export const AspectRatioIcon16x9 = () => (
 );
 
 export const AspectRatioIcon9x16 = () => (
-  <svg width="16" height="16" viewBox="0 0 16 16" className="h-5 w-5 text-white">
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    className="h-5 w-5 text-white"
+  >
     <path
       d="M10.7412 1.0127C12.002 1.14057 12.9863 2.20547 12.9863 3.5V12.5C12.9863 13.8806 11.8669 14.9998 10.4863 15H6.5C5.11938 14.9999 4 13.8806 4 12.5V3.5C4 2.11936 5.11938 1.00011 6.5 1H10.4863L10.7412 1.0127ZM6.5 2C5.67167 2.00011 5 2.67164 5 3.5V12.5C5 13.3284 5.67167 13.9999 6.5 14H10.4863C11.3146 13.9998 11.9863 13.3283 11.9863 12.5V3.5C11.9863 2.72348 11.3959 2.0848 10.6396 2.00781L10.4863 2H6.5Z"
       fill="currentColor"
@@ -160,7 +200,12 @@ export const AspectRatioIcon9x16 = () => (
 );
 
 export const AspectRatioIcon3x4 = () => (
-  <svg width="16" height="16" viewBox="0 0 16 16" className="h-5 w-5 text-white">
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    className="h-5 w-5 text-white"
+  >
     <path
       d="M13 12.5C13 13.8807 11.8807 15 10.5 15L4.5 15C3.11929 15 2 13.8807 2 12.5L2 3.5C2 2.11929 3.11929 1 4.5 1L10.5 1C11.8807 1 13 2.11929 13 3.5L13 12.5ZM12 3.5C12 2.67157 11.3284 2 10.5 2L4.5 2C3.67157 2 3 2.67157 3 3.5L3 12.5C3 13.3284 3.67157 14 4.5 14L10.5 14C11.3284 14 12 13.3284 12 12.5L12 3.5Z"
       fill="currentColor"
@@ -169,7 +214,12 @@ export const AspectRatioIcon3x4 = () => (
 );
 
 export const AspectRatioIcon2x3 = () => (
-  <svg width="16" height="16" viewBox="0 0 16 16" className="h-5 w-5 text-white">
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    className="h-5 w-5 text-white"
+  >
     <path
       d="M11.5 1C12.8807 1 14 2.11929 14 3.5V12.5C14 13.8807 12.8807 15 11.5 15H4.5C3.11929 15 2 13.8807 2 12.5V3.5C2 2.11929 3.11929 1 4.5 1H11.5ZM4.5 2C3.67157 2 3 2.67157 3 3.5V12.5C3 13.3284 3.67157 14 4.5 14H11.5C12.3284 14 13 13.3284 13 12.5V3.5C13 2.67157 12.3284 2 11.5 2H4.5Z"
       fill="currentColor"
@@ -178,7 +228,12 @@ export const AspectRatioIcon2x3 = () => (
 );
 
 export const AspectRatioIcon3x2 = () => (
-  <svg width="16" height="16" viewBox="0 0 16 16" className="h-5 w-5 text-white">
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    className="h-5 w-5 text-white"
+  >
     <path
       d="M12.5 3C13.8807 3 15 4.11929 15 5.5V10.5C15 11.8807 13.8807 13 12.5 13H3.5C2.11929 13 1 11.8807 1 10.5V5.5C1 4.11929 2.11929 3 3.5 3H12.5ZM3.5 4C2.67157 4 2 4.67157 2 5.5V10.5C2 11.3284 2.67157 12 3.5 12H12.5C13.3284 12 14 11.3284 14 10.5V5.5C14 4.67157 13.3284 4 12.5 4H3.5Z"
       fill="currentColor"
@@ -187,7 +242,12 @@ export const AspectRatioIcon3x2 = () => (
 );
 
 export const AspectRatioIcon4x5 = () => (
-  <svg width="16" height="16" viewBox="0 0 16 16" className="h-5 w-5 text-white">
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    className="h-5 w-5 text-white"
+  >
     <path
       d="M11 1C12.3807 1 13.5 2.11929 13.5 3.5V12.5C13.5 13.8807 12.3807 15 11 15H5C3.61929 15 2.5 13.8807 2.5 12.5V3.5C2.5 2.11929 3.61929 1 5 1H11ZM5 2C4.17157 2 3.5 2.67157 3.5 3.5V12.5C3.5 13.3284 4.17157 14 5 14H11C11.8284 14 12.5 13.3284 12.5 12.5V3.5C12.5 2.67157 11.8284 2 11 2H5Z"
       fill="currentColor"
@@ -196,7 +256,12 @@ export const AspectRatioIcon4x5 = () => (
 );
 
 export const AspectRatioIcon5x4 = () => (
-  <svg width="16" height="16" viewBox="0 0 16 16" className="h-5 w-5 text-white">
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    className="h-5 w-5 text-white"
+  >
     <path
       d="M12.5 2.5C13.8807 2.5 15 3.61929 15 5V11C15 12.3807 13.8807 13.5 12.5 13.5H3.5C2.11929 13.5 1 12.3807 1 11V5C1 3.61929 2.11929 2.5 3.5 2.5H12.5ZM3.5 3.5C2.67157 3.5 2 4.17157 2 5V11C2 11.8284 2.67157 12.5 3.5 12.5H12.5C13.3284 12.5 14 11.8284 14 11V5C14 4.17157 13.3284 3.5 12.5 3.5H3.5Z"
       fill="currentColor"
@@ -223,7 +288,11 @@ export const KeyIcon = () => (
   </svg>
 );
 
-export const TrashIcon = ({ className = "h-4 w-4" }: { className?: string }) => (
+export const TrashIcon = ({
+  className = "h-4 w-4",
+}: {
+  className?: string;
+}) => (
   <svg width="20" height="20" viewBox="0 0 20 20" className={className}>
     <path
       fillRule="evenodd"
