@@ -4,7 +4,7 @@ import { logger } from "@/lib/logger";
 import { saveFiles } from "@/lib/storage";
 
 export async function POST(request: NextRequest) {
-  const { error: authError } = await requireAuth(request);
+  const { error: authError } = await requireAuth();
   if (authError) return authError;
 
   try {

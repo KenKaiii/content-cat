@@ -16,7 +16,7 @@ export interface GeneratedAsset {
 
 // GET /api/assets - List assets (uploaded or generated)
 export async function GET(request: Request) {
-  const { user, error } = await requireAuth(request);
+  const { user, error } = await requireAuth();
   if (error) return error;
 
   try {
@@ -102,7 +102,7 @@ export async function GET(request: Request) {
 
 // DELETE /api/assets - Delete an asset
 export async function DELETE(request: Request) {
-  const { user, error } = await requireAuth(request);
+  const { user, error } = await requireAuth();
   if (error) return error;
 
   try {

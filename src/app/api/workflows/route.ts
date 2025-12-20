@@ -4,8 +4,8 @@ import { requireAuth } from "@/lib/auth-helpers";
 import { logger } from "@/lib/logger";
 
 // GET - List all workflows for the current user
-export async function GET(request: Request) {
-  const { user, error } = await requireAuth(request);
+export async function GET() {
+  const { user, error } = await requireAuth();
   if (error) return error;
 
   try {
@@ -34,7 +34,7 @@ export async function GET(request: Request) {
 
 // POST - Create a new workflow
 export async function POST(request: Request) {
-  const { user, error } = await requireAuth(request);
+  const { user, error } = await requireAuth();
   if (error) return error;
 
   try {

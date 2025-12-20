@@ -8,7 +8,7 @@ export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const { user, error } = await requireAuth(request);
+  const { user, error } = await requireAuth();
   if (error) return error;
 
   try {
@@ -41,7 +41,7 @@ export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const { user, error } = await requireAuth(request);
+  const { user, error } = await requireAuth();
   if (error) return error;
 
   try {
@@ -94,7 +94,7 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const { user, error } = await requireAuth(request);
+  const { user, error } = await requireAuth();
   if (error) return error;
 
   try {

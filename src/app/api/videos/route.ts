@@ -9,7 +9,7 @@ const MAX_PAGE_SIZE = 50;
 // GET /api/videos - List videos with pagination
 // Excludes large base64 fields by default for performance
 export async function GET(request: Request) {
-  const { user, error } = await requireAuth(request);
+  const { user, error } = await requireAuth();
   if (error) return error;
 
   try {
@@ -70,7 +70,7 @@ export async function GET(request: Request) {
 
 // POST /api/videos - Create a new video record
 export async function POST(request: Request) {
-  const { user, error } = await requireAuth(request);
+  const { user, error } = await requireAuth();
   if (error) return error;
 
   try {

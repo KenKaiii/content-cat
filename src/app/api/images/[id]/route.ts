@@ -8,7 +8,7 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const { user, error } = await requireAuth(request);
+  const { user, error } = await requireAuth();
   if (error) return error;
 
   try {

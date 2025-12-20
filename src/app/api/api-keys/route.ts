@@ -16,7 +16,7 @@ import {
 
 // GET /api/api-keys - List all API keys (masked)
 export async function GET(request: Request) {
-  const { user, error } = await requireAuth(request);
+  const { user, error } = await requireAuth();
   if (error) return error;
 
   // Rate limit sensitive operations
@@ -55,7 +55,7 @@ export async function GET(request: Request) {
 
 // POST /api/api-keys - Create or update an API key
 export async function POST(request: Request) {
-  const { user, error } = await requireAuth(request);
+  const { user, error } = await requireAuth();
   if (error) return error;
 
   // Rate limit sensitive operations
@@ -115,7 +115,7 @@ export async function POST(request: Request) {
 
 // DELETE /api/api-keys - Delete an API key by service
 export async function DELETE(request: Request) {
-  const { user, error } = await requireAuth(request);
+  const { user, error } = await requireAuth();
   if (error) return error;
 
   // Rate limit sensitive operations

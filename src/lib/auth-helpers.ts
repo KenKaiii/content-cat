@@ -1,33 +1,17 @@
 import { NextResponse } from "next/server";
-import { prisma } from "./prisma";
+import { validateSession } from "./auth";
 
 /**
- * Validate session from request headers (set by middleware)
+ * Get authenticated user from session cookie
  * Use this in API routes that need user context
  */
-export async function getAuthenticatedUser(request: Request) {
-  const sessionToken = request.headers.get("x-session-token");
-
-  if (!sessionToken) {
-    return null;
-  }
-
+export async function getAuthenticatedUser() {
   try {
-    const session = await prisma.session.findUnique({
-      where: { token: sessionToken },
-      include: { user: true },
-    });
-
-    if (!session || session.expiresAt < new Date()) {
+    const result = await validateSession();
+    if (!result) {
       return null;
     }
-
-    return {
-      id: session.user.id,
-      email: session.user.email,
-      name: session.user.name,
-      role: session.user.role,
-    };
+    return result.user;
   } catch {
     return null;
   }
@@ -37,8 +21,8 @@ export async function getAuthenticatedUser(request: Request) {
  * Require authentication for an API route
  * Returns a 401 response if not authenticated
  */
-export async function requireAuth(request: Request) {
-  const user = await getAuthenticatedUser(request);
+export async function requireAuth() {
+  const user = await getAuthenticatedUser();
 
   if (!user) {
     return {
@@ -56,8 +40,8 @@ export async function requireAuth(request: Request) {
 /**
  * Require admin role for an API route
  */
-export async function requireAdmin(request: Request) {
-  const { user, error } = await requireAuth(request);
+export async function requireAdmin() {
+  const { user, error } = await requireAuth();
 
   if (error) {
     return { user: null, error };

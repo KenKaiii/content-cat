@@ -427,14 +427,12 @@ function WorkflowPageContent() {
             {/* Empty State */}
             {!isLoading && nodes.length === 0 && (
               <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="mb-4 text-6xl opacity-20">🎬</div>
-                  <h2 className="mb-2 text-xl font-medium text-gray-400">
-                    Start Building Your Workflow
+                <div className="flex flex-col items-center justify-center gap-2">
+                  <h2 className="font-heading text-center text-2xl font-bold text-white uppercase">
+                    Nothing Here Yet
                   </h2>
-                  <p className="max-w-sm text-sm text-gray-500">
-                    Drag nodes from the bottom toolbar onto the canvas to create
-                    your video generation pipeline
+                  <p className="text-center text-sm text-gray-400">
+                    Press <kbd className="rounded bg-zinc-700 px-1.5 py-0.5 font-mono text-xs text-zinc-300">TAB</kbd> to open the nodes panel
                   </p>
                 </div>
               </div>

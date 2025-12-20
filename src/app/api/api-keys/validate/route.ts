@@ -6,7 +6,7 @@ import { requireAuth } from "@/lib/auth-helpers";
 // POST /api/api-keys/validate - Validate an API key
 export async function POST(request: Request) {
   // Require authentication to validate keys
-  const { error: authError } = await requireAuth(request);
+  const { error: authError } = await requireAuth();
   if (authError) return authError;
 
   try {

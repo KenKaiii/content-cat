@@ -11,8 +11,8 @@ function capitalizeFirst(str: string): string {
 
 // GET handler - List all entities for the current user
 export function createListHandler(entityType: EntityType) {
-  return async function GET(request: Request) {
-    const { user, error } = await requireAuth(request);
+  return async function GET() {
+    const { user, error } = await requireAuth();
     if (error) return error;
 
     try {
@@ -43,7 +43,7 @@ export function createListHandler(entityType: EntityType) {
 // POST handler - Create a new entity for the current user
 export function createCreateHandler(entityType: EntityType) {
   return async function POST(request: Request) {
-    const { user, error } = await requireAuth(request);
+    const { user, error } = await requireAuth();
     if (error) return error;
 
     try {
@@ -88,7 +88,7 @@ export function createGetByIdHandler(entityType: EntityType) {
     request: Request,
     { params }: { params: Promise<{ id: string }> }
   ) {
-    const { user, error } = await requireAuth(request);
+    const { user, error } = await requireAuth();
     if (error) return error;
 
     try {
@@ -126,7 +126,7 @@ export function createDeleteHandler(entityType: EntityType) {
     request: Request,
     { params }: { params: Promise<{ id: string }> }
   ) {
-    const { user, error } = await requireAuth(request);
+    const { user, error } = await requireAuth();
     if (error) return error;
 
     try {
@@ -157,7 +157,7 @@ export function createUpdateHandler(entityType: EntityType) {
     request: Request,
     { params }: { params: Promise<{ id: string }> }
   ) {
-    const { user, error } = await requireAuth(request);
+    const { user, error } = await requireAuth();
     if (error) return error;
 
     try {

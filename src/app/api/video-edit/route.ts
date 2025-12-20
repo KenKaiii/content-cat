@@ -435,7 +435,7 @@ interface TransitionRequest {
 type VideoEditRequest = ConcatRequest | TrimRequest | TransitionRequest;
 
 export async function POST(request: NextRequest) {
-  const { error: authError } = await requireAuth(request);
+  const { error: authError } = await requireAuth();
   if (authError) return authError;
 
   const startTime = Date.now();

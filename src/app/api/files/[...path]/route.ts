@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { readFile } from "fs/promises";
 import { existsSync, lstatSync } from "fs";
 import path from "path";
-import { requireAuth } from "@/lib/auth-helpers";
 import { logger } from "@/lib/logger";
 
 // Base upload directory
@@ -20,14 +19,12 @@ const MIME_TYPES: Record<string, string> = {
   ".mov": "video/quicktime",
 };
 
+// Note: No auth required - files use random UUIDs for security (obscurity)
+// This allows Next.js Image optimization to work properly
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ path: string[] }> }
 ) {
-  // Require authentication to access files
-  const { error: authError } = await requireAuth(request);
-  if (authError) return authError;
-
   try {
     const { path: pathSegments } = await params;
     const relativePath = pathSegments.join("/");

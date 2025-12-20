@@ -8,7 +8,7 @@ const MAX_PAGE_SIZE = 100;
 
 // GET /api/images - List images with pagination
 export async function GET(request: Request) {
-  const { user, error } = await requireAuth(request);
+  const { user, error } = await requireAuth();
   if (error) return error;
 
   try {
@@ -53,7 +53,7 @@ export async function GET(request: Request) {
 
 // POST /api/images - Create a new image
 export async function POST(request: Request) {
-  const { user, error } = await requireAuth(request);
+  const { user, error } = await requireAuth();
   if (error) return error;
 
   try {

@@ -19,7 +19,7 @@ import { logger } from "@/lib/logger";
 import { resolveImageForFal } from "@/lib/storage";
 
 export async function POST(request: NextRequest) {
-  const { user, error: authError } = await requireAuth(request);
+  const { user, error: authError } = await requireAuth();
   if (authError) return authError;
 
   // Rate limiting for expensive generation operations

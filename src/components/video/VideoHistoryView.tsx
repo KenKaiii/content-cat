@@ -1,7 +1,6 @@
 "use client";
 
 import { VideoGridSkeleton, VideoResultCard } from "./index";
-import { VideoIcon } from "./icons";
 import type { GeneratedVideo } from "./types";
 
 interface VideoHistoryViewProps {
@@ -54,12 +53,7 @@ export default function VideoHistoryView({
           {/* Empty state if no videos and not loading */}
           {!isLoading && videos.length === 0 && pendingCount === 0 && (
             <div className="flex h-full w-full items-center justify-center py-16">
-              <div className="flex flex-col items-center justify-center gap-4">
-                <div className="grid h-32 w-52 items-center justify-center rounded-xl bg-zinc-800/50">
-                  <div className="text-zinc-600">
-                    <VideoIcon />
-                  </div>
-                </div>
+              <div className="flex flex-col items-center justify-center gap-2">
                 <h2 className="font-heading text-center text-2xl font-bold text-white uppercase">
                   Nothing Here Yet
                 </h2>
