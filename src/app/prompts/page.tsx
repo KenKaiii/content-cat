@@ -120,12 +120,66 @@ function CategoryTabs({
   );
 }
 
+function CopyIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      className={className}
+    >
+      <rect
+        x="9"
+        y="9"
+        width="13"
+        height="13"
+        rx="2"
+        stroke="currentColor"
+        strokeWidth="2"
+      />
+      <path
+        d="M5 15H4C2.89543 15 2 14.1046 2 13V4C2 2.89543 2.89543 2 4 2H13C14.1046 2 15 2.89543 15 4V5"
+        stroke="currentColor"
+        strokeWidth="2"
+      />
+    </svg>
+  );
+}
+
+function CheckIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      className={className}
+    >
+      <path
+        d="M5 13L9 17L19 7"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function PromptCardComponent({ prompt }: { prompt: Prompt }) {
   const router = useRouter();
+  const [copied, setCopied] = useState(false);
 
   const handleUsePrompt = () => {
     const encodedPrompt = encodeURIComponent(prompt.prompt);
     router.push(`/image?prompt=${encodedPrompt}`);
+  };
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(prompt.prompt);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
@@ -145,12 +199,21 @@ function PromptCardComponent({ prompt }: { prompt: Prompt }) {
             {prompt.description}
           </p>
         </div>
-        <button
-          onClick={handleUsePrompt}
-          className="flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-white font-medium text-black shadow-[0_4px_0_0_#a1a1aa] transition-all duration-150 hover:bg-zinc-100 hover:shadow-[0_4px_0_0_#8b8b94] active:translate-y-0.5 active:shadow-[0_2px_0_0_#a1a1aa]"
-        >
-          <span className="text-sm">Use Prompt</span>
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={handleUsePrompt}
+            className="flex h-10 flex-1 items-center justify-center gap-2 rounded-lg bg-white font-medium text-black shadow-[0_4px_0_0_#a1a1aa] transition-all duration-150 hover:bg-zinc-100 hover:shadow-[0_4px_0_0_#8b8b94] active:translate-y-0.5 active:shadow-[0_2px_0_0_#a1a1aa]"
+          >
+            <span className="text-sm">Use Prompt</span>
+          </button>
+          <button
+            onClick={handleCopy}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-black shadow-[0_4px_0_0_#a1a1aa] transition-all duration-150 hover:bg-zinc-100 hover:shadow-[0_4px_0_0_#8b8b94] active:translate-y-0.5 active:shadow-[0_2px_0_0_#a1a1aa]"
+            title="Copy prompt"
+          >
+            {copied ? <CheckIcon /> : <CopyIcon />}
+          </button>
+        </div>
       </div>
     </div>
   );
