@@ -104,6 +104,9 @@ export interface NanoBananaProNodeData extends BaseNodeData {
   enableSafetyChecker?: boolean;
   // Number of reference image inputs (5-14, default 5)
   inputCount?: number;
+  // Selected character and product for reference images
+  characterId?: string;
+  productId?: string;
 }
 
 // Video Concat node data type

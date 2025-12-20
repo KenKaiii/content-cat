@@ -6,10 +6,11 @@ import { useReactFlow } from "@xyflow/react";
 import Image from "next/image";
 import BaseNode from "./BaseNode";
 import { downloadMedia } from "./MediaSaveOverlay";
-import { DropdownBadge } from "./NodeBadges";
+import { DropdownBadge, PlaceholderDropdownBadge } from "./NodeBadges";
 import { PromptInput } from "./PromptInput";
 import { useNodeUpdate } from "./useNodeUpdate";
 import type { NanoBananaProNodeData } from "../types";
+import type { SavedCharacter, SavedProduct } from "@/types/entities";
 import {
   getContainerHeight,
   NODE_WIDTH,
@@ -100,8 +101,54 @@ const NanoBananaProNode = memo(function NanoBananaProNode({
   const [sourceAspectRatio, setSourceAspectRatio] = useState<string | null>(
     null
   );
+  const [savedCharacters, setSavedCharacters] = useState<SavedCharacter[]>([]);
+  const [savedProducts, setSavedProducts] = useState<SavedProduct[]>([]);
   const { setNodes, getNodes, getEdges } = useReactFlow();
   const updateData = useNodeUpdate(id);
+
+  // Fetch characters and products on mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [charsRes, prodsRes] = await Promise.all([
+          fetch("/api/characters"),
+          fetch("/api/products"),
+        ]);
+        if (charsRes.ok) {
+          const chars = await charsRes.json();
+          setSavedCharacters(chars);
+        }
+        if (prodsRes.ok) {
+          const prods = await prodsRes.json();
+          setSavedProducts(prods);
+        }
+      } catch (error) {
+        console.error("Failed to fetch characters/products:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // Build dropdown options for characters and products
+  const characterOptions = useMemo(() => {
+    return [
+      { value: "", label: "No Character" },
+      ...savedCharacters.map((c) => ({
+        value: c.id,
+        label: c.name,
+      })),
+    ];
+  }, [savedCharacters]);
+
+  const productOptions = useMemo(() => {
+    return [
+      { value: "", label: "No Product" },
+      ...savedProducts.map((p) => ({
+        value: p.id,
+        label: p.name,
+      })),
+    ];
+  }, [savedProducts]);
 
   // Dynamic input count (5-14)
   const inputCount = data.inputCount || MIN_INPUTS;
@@ -310,6 +357,20 @@ const NanoBananaProNode = memo(function NanoBananaProNode({
 
         {/* Settings badges */}
         <div className="flex flex-wrap items-center gap-1.5">
+          <PlaceholderDropdownBadge
+            value={data.characterId || ""}
+            options={characterOptions}
+            onSelect={(v) => updateData("characterId", v || undefined)}
+            emptyLabel="Character"
+            createHref="/create-character"
+          />
+          <PlaceholderDropdownBadge
+            value={data.productId || ""}
+            options={productOptions}
+            onSelect={(v) => updateData("productId", v || undefined)}
+            emptyLabel="Product"
+            createHref="/products"
+          />
           <DropdownBadge
             value={detectedAspectRatio}
             options={ASPECT_RATIO_OPTIONS}

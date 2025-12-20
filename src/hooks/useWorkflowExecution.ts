@@ -321,6 +321,44 @@ export function useWorkflowExecution() {
   );
 
   /**
+   * Fetch character reference images by ID
+   */
+  const fetchCharacterImages = useCallback(
+    async (characterId: string): Promise<string[]> => {
+      try {
+        const response = await fetch(`/api/characters/${characterId}`);
+        if (response.ok) {
+          const character = await response.json();
+          return character.referenceImages || [];
+        }
+      } catch (error) {
+        console.error("[Execution] Failed to fetch character:", error);
+      }
+      return [];
+    },
+    []
+  );
+
+  /**
+   * Fetch product reference images by ID
+   */
+  const fetchProductImages = useCallback(
+    async (productId: string): Promise<string[]> => {
+      try {
+        const response = await fetch(`/api/products/${productId}`);
+        if (response.ok) {
+          const product = await response.json();
+          return product.referenceImages || [];
+        }
+      } catch (error) {
+        console.error("[Execution] Failed to fetch product:", error);
+      }
+      return [];
+    },
+    []
+  );
+
+  /**
    * Execute NanoBananaPro (image generation) node
    */
   const executeNanoBananaPro = useCallback(
@@ -346,6 +384,25 @@ export function useWorkflowExecution() {
         };
       }
 
+      // Collect all reference image URLs
+      const allImageUrls: string[] = [];
+
+      // Fetch character reference images if a character is selected
+      if (nodeData.characterId) {
+        console.log("[Execution] Fetching character images for:", nodeData.characterId);
+        const charImages = await fetchCharacterImages(nodeData.characterId);
+        console.log("[Execution] Character images:", charImages.length);
+        allImageUrls.push(...charImages);
+      }
+
+      // Fetch product reference images if a product is selected
+      if (nodeData.productId) {
+        console.log("[Execution] Fetching product images for:", nodeData.productId);
+        const prodImages = await fetchProductImages(nodeData.productId);
+        console.log("[Execution] Product images:", prodImages.length);
+        allImageUrls.push(...prodImages);
+      }
+
       // Convert local file URLs to data URLs for fal.ai
       if (imageUrl) {
         try {
@@ -354,6 +411,7 @@ export function useWorkflowExecution() {
             "[Execution] Converted imageUrl to data URL (length):",
             imageUrl.length
           );
+          allImageUrls.push(imageUrl);
         } catch {
           return { success: false, error: "Failed to process reference image" };
         }
@@ -370,7 +428,7 @@ export function useWorkflowExecution() {
         numImages: nodeData.numImages || 1,
         enableWebSearch: nodeData.enableWebSearch || false,
         enableSafetyChecker: nodeData.enableSafetyChecker ?? true,
-        imageUrls: imageUrl ? [imageUrl] : undefined,
+        imageUrls: allImageUrls.length > 0 ? allImageUrls : undefined,
       };
 
       try {
@@ -423,7 +481,7 @@ export function useWorkflowExecution() {
         throw new Error("Image generation failed");
       }
     },
-    [extractPrompt, extractImageUrl, updateNodeData]
+    [extractPrompt, extractImageUrl, updateNodeData, fetchCharacterImages, fetchProductImages]
   );
 
   /**
