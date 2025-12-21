@@ -81,9 +81,9 @@ const MediaSaveOverlay = memo(function MediaSaveOverlay({
 
       {/* Overlay */}
       <div
-        className="absolute inset-0 flex items-center justify-center transition-all duration-300"
+        className="absolute inset-0 flex items-center justify-center transition-opacity duration-200"
         style={{
-          backgroundColor: isHovered ? "rgba(0, 0, 0, 0.4)" : "transparent",
+          backgroundColor: "rgba(0, 0, 0, 0.4)",
           opacity: isHovered ? 1 : 0,
           pointerEvents: isHovered ? "auto" : "none",
         }}
@@ -125,8 +125,9 @@ export const VideoSaveButton = memo(function VideoSaveButton({
       className="absolute bottom-2 left-2 flex items-center gap-1.5 rounded bg-black/60 px-2 py-1 text-[10px] text-white backdrop-blur-sm transition-all duration-200 hover:bg-black/80"
       style={{
         opacity: show ? 1 : 0,
-        transform: show ? "translateY(0)" : "translateY(4px)",
+        transform: show ? "translate3d(0, 0, 0)" : "translate3d(0, 4px, 0)",
         pointerEvents: show ? "auto" : "none",
+        willChange: "transform, opacity",
       }}
     >
       <DownloadIcon />

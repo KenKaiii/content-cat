@@ -25,16 +25,20 @@ export default function ShaderBackground() {
   }, []);
 
   return (
-    <div className="fixed inset-0 -z-10">
+    <div className="fixed inset-0 -z-10" style={{ willChange: "transform" }}>
       {/* Static background color while shader loads */}
       <div
-        className="absolute inset-0 bg-[#1a1a2e] transition-opacity duration-700"
-        style={{ opacity: isReady ? 0 : 1, pointerEvents: "none" }}
+        className="absolute inset-0 bg-[#1a1a2e] transition-opacity duration-300"
+        style={{
+          opacity: isReady ? 0 : 1,
+          pointerEvents: "none",
+          willChange: "opacity",
+        }}
       />
       {/* Shader canvas with fade-in */}
       <div
-        className="absolute inset-0 transition-opacity duration-700"
-        style={{ opacity: isReady ? 1 : 0 }}
+        className="absolute inset-0 transition-opacity duration-300"
+        style={{ opacity: isReady ? 1 : 0, willChange: "opacity" }}
       >
         <ShaderGradientCanvas
           style={{

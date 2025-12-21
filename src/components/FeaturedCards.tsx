@@ -90,7 +90,7 @@ const FeaturedCard = memo(function FeaturedCard({
         />
       </div>
       <div className="mt-2">
-        <h4 className="font-heading text-sm text-white transition-colors duration-300 group-hover:text-pink-400">
+        <h4 className="font-heading text-sm text-white transition-colors duration-150 group-hover:text-pink-400">
           {card.title}
         </h4>
         <p className="text-xs text-zinc-300">{card.description}</p>

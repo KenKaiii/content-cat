@@ -71,7 +71,7 @@ export default function Header() {
               <Link
                 key={item.label}
                 href={item.href}
-                className="text-base font-semibold text-white transition-colors duration-300 hover:text-pink-400"
+                className="text-base font-semibold text-white transition-colors duration-150 hover:text-pink-400"
               >
                 {item.label}
               </Link>
@@ -92,7 +92,7 @@ export default function Header() {
         <div className="flex items-center gap-4">
           <button
             onClick={() => setIsApiKeysModalOpen(true)}
-            className="text-base font-semibold text-white transition-colors duration-300 hover:text-pink-400"
+            className="text-base font-semibold text-white transition-colors duration-150 hover:text-pink-400"
           >
             API Keys
           </button>

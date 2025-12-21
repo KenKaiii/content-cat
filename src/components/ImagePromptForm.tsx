@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { toast } from "sonner";
 import SelectDropdown from "@/components/SelectDropdown";
 import {
@@ -115,16 +115,16 @@ export default function ImagePromptForm({
     fetchData();
   }, []);
 
-  // Build dynamic options for characters and products
-  const characterOptions = savedCharacters.map((c) => ({
-    value: c.id,
-    label: c.name,
-  }));
+  // Memoize dynamic options for characters and products
+  const characterOptions = useMemo(
+    () => savedCharacters.map((c) => ({ value: c.id, label: c.name })),
+    [savedCharacters]
+  );
 
-  const productOptions = savedProducts.map((p) => ({
-    value: p.id,
-    label: p.name,
-  }));
+  const productOptions = useMemo(
+    () => savedProducts.map((p) => ({ value: p.id, label: p.name })),
+    [savedProducts]
+  );
 
   // Get selected character/product reference images
   const getSelectedReferenceImages = useCallback((): string[] => {

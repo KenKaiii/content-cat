@@ -71,9 +71,13 @@ export default function ImageDetailOverlay({
 
   return (
     <div
-      className={`fixed inset-0 z-50 bg-black/80 transition-opacity duration-300 ease-out ${
+      className={`fixed inset-0 z-50 grid bg-black/80 transition-all duration-200 ease-out ${
         isVisible ? "opacity-100" : "opacity-0"
-      } ${isExpanded ? "" : "grid grid-cols-[1fr_380px]"}`}
+      }`}
+      style={{
+        gridTemplateColumns: isExpanded ? "1fr 0px" : "1fr 380px",
+        willChange: "opacity",
+      }}
     >
       {/* Image Preview */}
       <div
@@ -81,7 +85,7 @@ export default function ImageDetailOverlay({
         onClick={handleBackgroundClick}
       >
         <div
-          className={`relative h-full w-full transition-opacity duration-300 ease-out ${
+          className={`relative h-full w-full transition-all duration-200 ease-out ${
             isExpanded ? "max-w-6xl" : "max-w-3xl"
           } ${isVisible ? "opacity-100" : "opacity-0"}`}
           onClick={handleImageClick}
@@ -96,27 +100,27 @@ export default function ImageDetailOverlay({
             fill
             priority
             loading="eager"
+            sizes="(max-width: 768px) 100vw, 80vw"
             className="pointer-events-none [border-radius:12px] object-contain"
           />
         </div>
       </div>
 
       {/* Detail Panel */}
-      {!isExpanded && (
-        <div
-          className={`h-full transition-opacity duration-300 ease-out ${
-            isVisible ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          <ImageDetailPanel
-            image={image}
-            onClose={handleClose}
-            onDelete={onDelete}
-            onDownload={onDownload}
-            onRecreate={onRecreate}
-          />
-        </div>
-      )}
+      <div
+        className={`h-full overflow-hidden transition-opacity duration-200 ease-out ${
+          isVisible && !isExpanded ? "opacity-100" : "opacity-0"
+        }`}
+        style={{ pointerEvents: isExpanded ? "none" : "auto" }}
+      >
+        <ImageDetailPanel
+          image={image}
+          onClose={handleClose}
+          onDelete={onDelete}
+          onDownload={onDownload}
+          onRecreate={onRecreate}
+        />
+      </div>
     </div>
   );
 }

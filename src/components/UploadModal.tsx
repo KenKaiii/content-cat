@@ -49,17 +49,19 @@ export default function UploadModal({
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center transition-all duration-300 ${
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm transition-opacity duration-200 ${
         isOpen
-          ? "visible bg-black/80 opacity-100 backdrop-blur-sm"
-          : "invisible opacity-0"
+          ? "opacity-100"
+          : "pointer-events-none opacity-0"
       }`}
+      style={{ willChange: "opacity" }}
       onClick={onClose}
     >
       <div
-        className={`mx-auto flex w-full max-w-3xl flex-col gap-8 rounded-3xl border border-white/10 bg-black/60 p-6 backdrop-blur-xl transition-all duration-300 md:p-8 ${
+        className={`mx-auto flex w-full max-w-3xl flex-col gap-8 rounded-3xl border border-white/10 bg-black/60 p-6 backdrop-blur-xl transition-all duration-200 md:p-8 ${
           isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"
         }`}
+        style={{ willChange: "transform, opacity" }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Good Photos Section */}

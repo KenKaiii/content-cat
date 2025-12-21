@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, memo, useCallback } from "react";
 import {
   ChevronDownIcon,
   CheckIcon,
@@ -16,7 +16,7 @@ interface SelectDropdownProps {
   placeholder?: string;
 }
 
-export default function SelectDropdown({
+export default memo(function SelectDropdown({
   options,
   value,
   onChange,
@@ -43,11 +43,21 @@ export default function SelectDropdown({
 
   const selectedOption = options.find((o) => o.value === value);
 
+  const handleToggle = useCallback(() => setIsOpen((prev) => !prev), []);
+
+  const handleSelect = useCallback(
+    (optionValue: string) => {
+      onChange(optionValue);
+      setIsOpen(false);
+    },
+    [onChange]
+  );
+
   return (
     <div ref={dropdownRef} className="relative">
       <button
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={handleToggle}
         className="flex h-10 items-center justify-between gap-2 rounded-xl border border-white/10 bg-white/5 px-3 text-sm text-white transition hover:bg-white/10"
       >
         <div className="flex items-center gap-2">
@@ -69,10 +79,7 @@ export default function SelectDropdown({
                 key={option.value}
                 role="option"
                 aria-selected={isSelected}
-                onClick={() => {
-                  onChange(option.value);
-                  setIsOpen(false);
-                }}
+                onClick={() => handleSelect(option.value)}
                 className="cursor-pointer px-1.5 py-1.5 text-sm"
               >
                 <div className="group flex w-full items-center gap-1">
@@ -97,4 +104,4 @@ export default function SelectDropdown({
       )}
     </div>
   );
-}
+});

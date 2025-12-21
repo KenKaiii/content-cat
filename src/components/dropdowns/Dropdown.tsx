@@ -1,5 +1,6 @@
 "use client";
 
+import { memo, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { useDropdownPosition } from "@/hooks/useDropdownPosition";
 import { ChevronRightIcon } from "./DropdownIcons";
@@ -9,7 +10,7 @@ interface DropdownProps extends BaseDropdownProps {
   options: DropdownOption[];
 }
 
-export function Dropdown({
+export const Dropdown = memo(function Dropdown({
   options,
   value,
   onChange,
@@ -23,6 +24,14 @@ export function Dropdown({
     onClose,
   });
 
+  const handleSelect = useCallback(
+    (optionId: string) => {
+      onChange(optionId);
+      onClose();
+    },
+    [onChange, onClose]
+  );
+
   if (!isOpen) return null;
 
   return createPortal(
@@ -35,10 +44,7 @@ export function Dropdown({
         {options.map((option) => (
           <button
             key={option.id}
-            onClick={() => {
-              onChange(option.id);
-              onClose();
-            }}
+            onClick={() => handleSelect(option.id)}
             className={`flex w-full items-center gap-3 rounded-xl p-2 text-left transition-colors outline-none hover:bg-white/5 ${
               value === option.id
                 ? "bg-pink-400/10 ring-1 ring-pink-400/30"
@@ -75,4 +81,4 @@ export function Dropdown({
     </div>,
     document.body
   );
-}
+});

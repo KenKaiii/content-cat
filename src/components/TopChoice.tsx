@@ -98,7 +98,7 @@ const ToolCardComponent = memo(function ToolCardComponent({
   return (
     <Link
       href={card.href}
-      className="group h-56 w-[17%] min-w-[160px] flex-shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl transition-colors duration-300 hover:border-white/20 hover:bg-black/50"
+      className="group h-56 w-[17%] min-w-[160px] flex-shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl transition-colors duration-150 hover:border-white/20 hover:bg-black/50"
     >
       <div className="relative h-40 w-full overflow-hidden bg-black/20">
         {/* Skeleton */}
@@ -130,9 +130,10 @@ const ToolCardComponent = memo(function ToolCardComponent({
           alt={`${card.title} after`}
           fill
           sizes="(max-width: 768px) 160px, 17vw"
-          className={`object-cover transition-[opacity,mask-position] duration-700 ease-out [mask-image:linear-gradient(to_left,black_0%,black_60%,transparent_100%)] [mask-position:100%_0] [mask-repeat:no-repeat] [mask-size:200%_100%] group-hover:[mask-position:-50%_0] ${
+          className={`object-cover transition-[opacity,mask-position] duration-400 ease-out [mask-image:linear-gradient(to_left,black_0%,black_60%,transparent_100%)] [mask-position:100%_0] [mask-repeat:no-repeat] [mask-size:200%_100%] group-hover:[mask-position:-50%_0] ${
             isLoaded ? "opacity-100" : "opacity-0"
           }`}
+          style={{ willChange: "mask-position" }}
           loading={priority ? "eager" : "lazy"}
           onLoad={() => setAfterLoaded(true)}
           onError={() => setAfterLoaded(true)}
@@ -147,7 +148,7 @@ const ToolCardComponent = memo(function ToolCardComponent({
       </div>
       <div className="flex h-16 items-start justify-between gap-2 p-3">
         <div className="min-w-0 flex-1">
-          <h4 className="truncate text-base font-medium text-white transition-colors duration-300 group-hover:text-pink-400">
+          <h4 className="truncate text-base font-medium text-white transition-colors duration-150 group-hover:text-pink-400">
             {card.title}
           </h4>
           <p className="truncate text-xs text-zinc-300">{card.description}</p>
@@ -170,7 +171,7 @@ export default function TopChoice() {
         </div>
         <Link
           href="/tools"
-          className="flex items-center gap-2 text-sm text-white transition-colors duration-300 hover:text-pink-400"
+          className="flex items-center gap-2 text-sm text-white transition-colors duration-150 hover:text-pink-400"
         >
           See all
           <span>→</span>

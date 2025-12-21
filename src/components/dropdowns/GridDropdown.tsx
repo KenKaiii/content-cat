@@ -1,5 +1,6 @@
 "use client";
 
+import { memo, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { useDropdownPosition } from "@/hooks/useDropdownPosition";
 import type { BaseDropdownProps } from "./types";
@@ -8,7 +9,7 @@ interface GridDropdownProps extends BaseDropdownProps {
   options: { id: string; label: string; description?: string }[];
 }
 
-export function GridDropdown({
+export const GridDropdown = memo(function GridDropdown({
   options,
   value,
   onChange,
@@ -24,6 +25,14 @@ export function GridDropdown({
     maxHeight: 400,
   });
 
+  const handleSelect = useCallback(
+    (optionId: string) => {
+      onChange(optionId);
+      onClose();
+    },
+    [onChange, onClose]
+  );
+
   if (!isOpen) return null;
 
   return createPortal(
@@ -37,10 +46,7 @@ export function GridDropdown({
           {options.map((option) => (
             <button
               key={option.id}
-              onClick={() => {
-                onChange(option.id);
-                onClose();
-              }}
+              onClick={() => handleSelect(option.id)}
               className={`flex w-full flex-col items-start rounded-lg px-2.5 py-2 text-left transition-colors outline-none hover:bg-white/5 ${
                 value === option.id ? "bg-white/10 ring-1 ring-pink-400/50" : ""
               }`}
@@ -60,4 +66,4 @@ export function GridDropdown({
     </div>,
     document.body
   );
-}
+});

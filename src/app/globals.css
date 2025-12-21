@@ -139,7 +139,8 @@ select,
 /* Performance: Skip rendering off-screen grid items */
 .grid-item-perf {
   content-visibility: auto;
-  contain-intrinsic-size: auto 1px;
+  contain-intrinsic-size: auto 320px;
+  contain: layout style;
 }
 
 .skeleton-loader::after {

@@ -178,40 +178,49 @@ export default function EntityManagementPage({
           {isCreating ? buttonLoadingText : buttonText}
         </button>
 
-        {/* Loading Skeletons */}
-        {isLoading && (
-          <div className="w-full max-w-4xl">
-            <div className="flex flex-wrap justify-center gap-4">
-              {Array.from({ length: 3 }).map((_, index) => (
-                <div
-                  key={`skeleton-${index}`}
-                  className="skeleton-loader h-72 w-48 rounded-none"
-                />
-              ))}
-            </div>
+        {/* Content Container - uses opacity transitions instead of unmounting */}
+        <div className="w-full max-w-4xl">
+          {/* Loading Skeletons */}
+          <div
+            className={`flex flex-wrap justify-center gap-4 transition-opacity duration-200 ${
+              isLoading ? "opacity-100" : "pointer-events-none absolute opacity-0"
+            }`}
+          >
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div
+                key={`skeleton-${index}`}
+                className="skeleton-loader h-72 w-48 rounded-xl"
+              />
+            ))}
           </div>
-        )}
 
-        {/* Saved Entities Section */}
-        {!isLoading && entities.length > 0 && (
-          <div className="w-full max-w-4xl">
-            <div className="flex flex-wrap justify-center gap-4">
-              {entities.map((entity) => (
-                <EntityCard
-                  key={entity.id}
-                  entity={entity}
-                  onGenerate={handleGenerateWithEntity}
-                  onEdit={handleEditEntity}
-                  onDelete={handleDelete}
-                />
-              ))}
-            </div>
+          {/* Saved Entities Section */}
+          <div
+            className={`flex flex-wrap justify-center gap-4 transition-opacity duration-200 ${
+              !isLoading && entities.length > 0
+                ? "opacity-100"
+                : "pointer-events-none absolute opacity-0"
+            }`}
+          >
+            {entities.map((entity) => (
+              <EntityCard
+                key={entity.id}
+                entity={entity}
+                onGenerate={handleGenerateWithEntity}
+                onEdit={handleEditEntity}
+                onDelete={handleDelete}
+              />
+            ))}
           </div>
-        )}
 
-        {/* Empty State / Gallery Section */}
-        {!isLoading && entities.length === 0 && (
-          <div className="flex gap-4 overflow-x-auto pb-2">
+          {/* Empty State / Gallery Section */}
+          <div
+            className={`flex justify-center gap-4 overflow-x-auto pb-2 transition-opacity duration-200 ${
+              !isLoading && entities.length === 0
+                ? "opacity-100"
+                : "pointer-events-none absolute opacity-0"
+            }`}
+          >
             {galleryImages.map((item) => (
               <div
                 key={item.id}
@@ -228,7 +237,7 @@ export default function EntityManagementPage({
               </div>
             ))}
           </div>
-        )}
+        </div>
       </main>
     </div>
   );
