@@ -5,23 +5,79 @@
 
 set -e
 
-# Colors
-CYAN='\033[0;36m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-RED='\033[0;31m'
-DIM='\033[2m'
-NC='\033[0m'
+# ══════════════════════════════════════════════════════════════════════════════
+# COLORS
+# ══════════════════════════════════════════════════════════════════════════════
 
-# Find project directory
+BOLD='\033[1m'
+DIM='\033[2m'
+RESET='\033[0m'
+
+BR_BLACK='\033[0;90m'
+BR_RED='\033[0;91m'
+BR_GREEN='\033[0;92m'
+BR_YELLOW='\033[0;93m'
+BR_BLUE='\033[0;94m'
+BR_MAGENTA='\033[0;95m'
+BR_CYAN='\033[0;96m'
+BR_WHITE='\033[0;97m'
+
+# ══════════════════════════════════════════════════════════════════════════════
+# UTILITIES
+# ══════════════════════════════════════════════════════════════════════════════
+
+command_exists() { command -v "$1" &>/dev/null; }
+hide_cursor() { tput civis 2>/dev/null || true; }
+show_cursor() { tput cnorm 2>/dev/null || true; }
+clear_line() { printf "\r\033[K"; }
+
+trap 'show_cursor' EXIT INT TERM
+
+ok() { printf "  ${BR_GREEN}✓${RESET} %s\n" "$1"; }
+info() { printf "  ${BR_BLUE}→${RESET} ${DIM}%s${RESET}\n" "$1"; }
+warn() { printf "  ${BR_YELLOW}!${RESET} %s\n" "$1"; }
+
+spinner() {
+    local pid=$1
+    local message=$2
+    local spin='⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'
+    local i=0
+
+    hide_cursor
+    while kill -0 "$pid" 2>/dev/null; do
+        printf "\r  ${BR_CYAN}%s${RESET} ${DIM}%s${RESET}" "${spin:i++%10:1}" "$message"
+        sleep 0.08
+    done
+    clear_line
+    show_cursor
+}
+
+run() {
+    local message=$1
+    shift
+    ("$@") &>/dev/null &
+    local pid=$!
+    spinner $pid "$message"
+    wait $pid
+    local status=$?
+    if [[ $status -eq 0 ]]; then
+        printf "\r  ${BR_GREEN}✓${RESET} %s\n" "$message"
+    else
+        printf "\r  ${BR_RED}✗${RESET} %s\n" "$message"
+        return $status
+    fi
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# FIND PROJECT
+# ══════════════════════════════════════════════════════════════════════════════
+
 find_project() {
-    # Check if running from within the project
     if [[ -f "./package.json" ]] && grep -q '"name": "content-cat"' ./package.json 2>/dev/null; then
         echo "$(pwd)"
         return
     fi
 
-    # Check common locations
     local locations=(
         "$HOME/content-cat"
         "$HOME/Content-Cat"
@@ -38,114 +94,194 @@ find_project() {
         fi
     done
 
-    # Not found
     echo ""
 }
 
-INSTALL_DIR=$(find_project)
+# ══════════════════════════════════════════════════════════════════════════════
+# SETUP FUNCTIONS
+# ══════════════════════════════════════════════════════════════════════════════
 
-# Not installed - run installer
-if [[ -z "$INSTALL_DIR" ]]; then
-    echo -e "${YELLOW}Content Cat not found. Installing to ~/content-cat...${NC}"
-    echo ""
+ensure_env() {
+    [[ -f ".env" ]] && return 0
 
-    # Download and run installer
-    INSTALLER_URL="https://raw.githubusercontent.com/KenKaiii/content-cat/main/scripts/install.sh"
+    local session_secret=$(openssl rand -hex 32 2>/dev/null || head -c 64 /dev/urandom | base64 | tr -dc 'a-zA-Z0-9' | head -c 64)
+    local cron_secret=$(openssl rand -hex 16 2>/dev/null || head -c 32 /dev/urandom | base64 | tr -dc 'a-zA-Z0-9' | head -c 32)
+    local encryption_key=$(openssl rand -hex 32 2>/dev/null || head -c 64 /dev/urandom | base64 | tr -dc 'a-zA-Z0-9' | head -c 64)
 
-    if command -v curl &>/dev/null; then
-        bash <(curl -fsSL "$INSTALLER_URL")
-    elif command -v wget &>/dev/null; then
-        bash <(wget -qO- "$INSTALLER_URL")
-    else
-        echo -e "${RED}Error: curl or wget required${NC}"
-        exit 1
-    fi
-    exit 0
-fi
+    cat > .env << EOF
+DATABASE_URL="postgresql://contentcat:contentcat@localhost:5499/contentcat?schema=public"
+NODE_ENV="development"
+SESSION_SECRET="${session_secret}"
+SESSION_EXPIRY_DAYS=7
+REDIS_URL="redis://localhost:6379"
+CRON_SECRET="${cron_secret}"
+ENCRYPTION_KEY="${encryption_key}"
+EOF
 
-cd "$INSTALL_DIR"
+    ok "Created .env"
+}
 
-echo ""
-echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${CYAN}  Content Cat${NC} 🐱"
-echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo ""
+ensure_deps() {
+    [[ -d "node_modules/.pnpm" ]] && return 0
 
-# Detect OS
-OS="linux"
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    OS="macos"
-elif [[ -f /proc/version ]] && grep -qi microsoft /proc/version; then
-    OS="wsl"
-fi
-
-# Start Docker services if available
-if command -v docker &>/dev/null; then
-    # Check if Docker daemon is running
-    if ! docker info &>/dev/null 2>&1; then
-        echo -e "${YELLOW}Starting Docker...${NC}"
-
-        case $OS in
-            macos)
-                open -a Docker 2>/dev/null || true
-                echo -e "${DIM}Waiting for Docker Desktop...${NC}"
-                local count=0
-                while ! docker info &>/dev/null 2>&1; do
-                    sleep 2
-                    ((count++))
-                    if [[ $count -gt 30 ]]; then
-                        echo -e "${YELLOW}⚠ Docker taking too long, continuing without it${NC}"
-                        break
-                    fi
-                done
-                ;;
-            wsl)
-                # WSL: Docker Desktop should be running in Windows
-                echo -e "${YELLOW}⚠ Start Docker Desktop in Windows${NC}"
-                echo -e "${DIM}Waiting for Docker...${NC}"
-                local count=0
-                while ! docker info &>/dev/null 2>&1; do
-                    sleep 2
-                    ((count++))
-                    if [[ $count -gt 15 ]]; then
-                        echo -e "${YELLOW}⚠ Docker not available, using local database${NC}"
-                        break
-                    fi
-                done
-                ;;
-            linux)
-                # Try starting Docker service
-                sudo systemctl start docker 2>/dev/null || true
-                sleep 2
-                ;;
-        esac
-    fi
-
-    # Start database containers if Docker is available
-    if docker info &>/dev/null 2>&1; then
-        if ! docker ps --format '{{.Names}}' 2>/dev/null | grep -q "content-cat-db"; then
-            echo -e "${GREEN}▶${NC} Starting PostgreSQL and Redis..."
-            docker compose up -d postgres redis 2>/dev/null || docker-compose up -d postgres redis 2>/dev/null || true
-            sleep 3
+    if ! command_exists pnpm; then
+        info "Installing pnpm..."
+        if command_exists corepack; then
+            corepack enable 2>/dev/null || true
+            corepack prepare pnpm@latest --activate 2>/dev/null || npm install -g pnpm
         else
-            echo -e "${GREEN}✓${NC} Database services running"
+            npm install -g pnpm
         fi
     fi
-else
-    echo -e "${DIM}Docker not installed - ensure PostgreSQL is running locally${NC}"
-fi
 
-# Check if pnpm is available
-if ! command -v pnpm &>/dev/null; then
-    echo -e "${YELLOW}Installing pnpm...${NC}"
-    npm install -g pnpm 2>/dev/null || corepack enable && corepack prepare pnpm@latest --activate
-fi
+    run "Installing dependencies" pnpm install --frozen-lockfile
+}
 
-# Start the app
-echo -e "${GREEN}▶${NC} Starting Content Cat..."
-echo ""
-echo -e "  ${CYAN}http://localhost:3000${NC}"
-echo -e "  ${DIM}Press Ctrl+C to stop${NC}"
-echo ""
+detect_os() {
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        echo "macos"
+    elif [[ -f /proc/version ]] && grep -qi microsoft /proc/version; then
+        echo "wsl"
+    else
+        echo "linux"
+    fi
+}
 
-pnpm dev
+start_docker() {
+    local os=$(detect_os)
+
+    if ! command_exists docker; then
+        warn "Docker not installed"
+        return 1
+    fi
+
+    if docker info &>/dev/null 2>&1; then
+        return 0
+    fi
+
+    info "Starting Docker..."
+
+    case $os in
+        macos)
+            open -a Docker 2>/dev/null || true
+            local count=0
+            hide_cursor
+            while ! docker info &>/dev/null 2>&1; do
+                printf "\r  ${BR_CYAN}⠋${RESET} ${DIM}Waiting for Docker Desktop...${RESET}"
+                sleep 2
+                ((count++))
+                if [[ $count -gt 30 ]]; then
+                    clear_line
+                    show_cursor
+                    warn "Docker timeout"
+                    return 1
+                fi
+            done
+            clear_line
+            show_cursor
+            ;;
+        wsl)
+            warn "Start Docker Desktop in Windows"
+            return 1
+            ;;
+        linux)
+            sudo systemctl start docker 2>/dev/null || true
+            sleep 2
+            ;;
+    esac
+
+    docker info &>/dev/null 2>&1
+}
+
+start_services() {
+    local db_running=$(docker ps --format '{{.Names}}' 2>/dev/null | grep -c "content-cat-db" || echo "0")
+    local redis_running=$(docker ps --format '{{.Names}}' 2>/dev/null | grep -c "content-cat-redis" || echo "0")
+
+    if [[ "$db_running" == "1" ]] && [[ "$redis_running" == "1" ]]; then
+        ok "Services running"
+        return 0
+    fi
+
+    run "Starting PostgreSQL & Redis" bash -c "docker compose up -d postgres redis 2>/dev/null"
+
+    # Wait for healthy
+    local count=0
+    while ! docker exec content-cat-db pg_isready -U contentcat &>/dev/null 2>&1; do
+        sleep 1
+        ((count++))
+        [[ $count -gt 30 ]] && break
+    done
+    sleep 1
+}
+
+ensure_schema() {
+    [[ ! -d "node_modules/.prisma" ]] && pnpm prisma generate &>/dev/null
+
+    if ! pnpm prisma db execute --stdin <<< "SELECT 1 FROM \"User\" LIMIT 1;" &>/dev/null 2>&1; then
+        run "Setting up database" pnpm prisma db push --skip-generate
+    else
+        ok "Database ready"
+    fi
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# MAIN
+# ══════════════════════════════════════════════════════════════════════════════
+
+main() {
+    INSTALL_DIR=$(find_project)
+
+    # Not installed - run installer
+    if [[ -z "$INSTALL_DIR" ]]; then
+        echo ""
+        printf "  ${BR_YELLOW}Content Cat not found${RESET}\n"
+        echo ""
+        info "Installing..."
+        echo ""
+
+        INSTALLER_URL="https://raw.githubusercontent.com/KenKaiii/content-cat/main/scripts/install.sh"
+
+        if command_exists curl; then
+            bash <(curl -fsSL "$INSTALLER_URL")
+        elif command_exists wget; then
+            bash <(wget -qO- "$INSTALLER_URL")
+        else
+            printf "  ${BR_RED}✗${RESET} curl or wget required\n"
+            exit 1
+        fi
+        exit 0
+    fi
+
+    cd "$INSTALL_DIR"
+
+    # Banner
+    echo ""
+    printf "  ${BR_MAGENTA}${BOLD}Content Cat${RESET} ${BR_CYAN}🐱${RESET}  ${DIM}by${RESET} ${BR_WHITE}Ken Kai${RESET}\n"
+    printf "  ${BR_BLACK}────────────────────────────────────────${RESET}\n"
+    echo ""
+
+    # Setup
+    ensure_env
+    ensure_deps
+
+    if start_docker; then
+        start_services
+        sleep 1
+        ensure_schema
+    fi
+
+    # Launch
+    echo ""
+    printf "  ${BR_BLACK}────────────────────────────────────────${RESET}\n"
+    echo ""
+    printf "  ${BR_GREEN}▶${RESET} ${BOLD}Starting...${RESET}\n"
+    echo ""
+    printf "    ${BR_WHITE}http://localhost:3000${RESET}\n"
+    echo ""
+    printf "    ${DIM}Press Ctrl+C to stop${RESET}\n"
+    echo ""
+
+    exec pnpm dev
+}
+
+main "$@"
