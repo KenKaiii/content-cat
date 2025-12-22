@@ -10,7 +10,8 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "reset-password": "tsx scripts/reset-password.ts"
   },
   "dependencies": {
     "@dagrejs/dagre": "^1.1.8",

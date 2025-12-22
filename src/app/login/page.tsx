@@ -151,7 +151,11 @@ function LoginForm() {
             <button
               type="button"
               className="inline-grid grid-flow-col content-center gap-1.5 overflow-hidden text-sm font-medium text-ellipsis whitespace-nowrap transition hover:brightness-75"
-              onClick={() => alert("Contact admin to reset password")}
+              onClick={() =>
+                alert(
+                  "To reset your password, run this command in the Content Cat directory:\n\npnpm reset-password"
+                )
+              }
             >
               Forgot Password
             </button>
