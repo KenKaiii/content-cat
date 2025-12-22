@@ -2,14 +2,13 @@
 
 import { useState, memo } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { toast } from "sonner";
 
 interface ToolCard {
   title: string;
   description: string;
   image: string;
   imageAfter: string;
-  href: string;
   badge?: {
     text: string;
     variant: "unlimited" | "pro" | "new";
@@ -22,14 +21,12 @@ const toolCards: ToolCard[] = [
     description: "Transform blurry photos into crisp images",
     image: "/images/sharpen-before.jpg",
     imageAfter: "/images/sharpen-after.jpg",
-    href: "/tools/sharpen",
   },
   {
     title: "Upscale",
     description: "Enhance resolution up to 8x",
     image: "/images/upscale-before.jpg",
     imageAfter: "/images/upscale-after.jpg",
-    href: "/tools/upscale",
     badge: { text: "PRO", variant: "pro" },
   },
   {
@@ -37,21 +34,18 @@ const toolCards: ToolCard[] = [
     description: "Transform any background instantly",
     image: "/images/bg-remix-before.jpg",
     imageAfter: "/images/bg-remix-after.jpg",
-    href: "/tools/background-remix",
   },
   {
     title: "Color Grade",
     description: "Professional cinematic color correction",
     image: "/images/color-before.jpg",
     imageAfter: "/images/color-after.jpg",
-    href: "/tools/color-grade",
   },
   {
     title: "Portrait Enhance",
     description: "Turn selfies into professional portraits",
     image: "/images/portrait-before.jpg",
     imageAfter: "/images/portrait-after.jpg",
-    href: "/tools/portrait-enhance",
     badge: { text: "NEW", variant: "new" },
   },
   {
@@ -59,14 +53,12 @@ const toolCards: ToolCard[] = [
     description: "Fix poorly lit photos with AI",
     image: "/images/lighting-before.jpg",
     imageAfter: "/images/lighting-after.jpg",
-    href: "/tools/lighting-fix",
   },
   {
     title: "Product Photo",
     description: "Create stunning product ad shots",
     image: "/images/product-before.jpg",
     imageAfter: "/images/product-after.jpg",
-    href: "/tools/product-photo",
     badge: { text: "PRO", variant: "pro" },
   },
   {
@@ -74,7 +66,6 @@ const toolCards: ToolCard[] = [
     description: "Apply artistic styles to any image",
     image: "/images/style-before.jpg",
     imageAfter: "/images/style-after.jpg",
-    href: "/tools/style-transfer",
   },
 ];
 
@@ -95,10 +86,16 @@ const ToolCardComponent = memo(function ToolCardComponent({
   const [afterLoaded, setAfterLoaded] = useState(false);
   const isLoaded = beforeLoaded && afterLoaded;
 
+  const handleClick = () => {
+    toast("Coming soon", {
+      description: `${card.title} will be available in a future update.`,
+    });
+  };
+
   return (
-    <Link
-      href={card.href}
-      className="group h-56 w-[17%] min-w-[160px] flex-shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl transition-colors duration-150 hover:border-white/20 hover:bg-black/50"
+    <button
+      onClick={handleClick}
+      className="group h-56 w-[17%] min-w-[160px] flex-shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-black/40 text-left backdrop-blur-xl transition-colors duration-150 hover:border-white/20 hover:bg-black/50"
     >
       <div className="relative h-40 w-full overflow-hidden bg-black/20">
         {/* Skeleton */}
@@ -155,11 +152,17 @@ const ToolCardComponent = memo(function ToolCardComponent({
         </div>
         <span className="flex-shrink-0 text-lg text-zinc-300">→</span>
       </div>
-    </Link>
+    </button>
   );
 });
 
 export default function TopChoice() {
+  const handleSeeAll = () => {
+    toast("Coming soon", {
+      description: "All tools will be available in a future update.",
+    });
+  };
+
   return (
     <section className="mt-8 flex flex-col gap-4">
       <div className="flex items-center justify-between">
@@ -169,13 +172,13 @@ export default function TopChoice() {
             Powerful AI enhancements at your fingertips
           </p>
         </div>
-        <Link
-          href="/tools"
+        <button
+          onClick={handleSeeAll}
           className="flex items-center gap-2 text-sm text-white transition-colors duration-150 hover:text-pink-400"
         >
           See all
           <span>→</span>
-        </Link>
+        </button>
       </div>
       <div className="hide-scrollbar flex gap-4 overflow-x-auto pb-2">
         {toolCards.map((card, index) => (

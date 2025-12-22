@@ -53,7 +53,7 @@ const FeaturedCardItem = memo(function FeaturedCardItem({
   const [isLoaded, setIsLoaded] = useState(false);
 
   const handleClick = () => {
-    toast.info("Coming soon", {
+    toast("Coming soon", {
       description: `${card.title} will be available in a future update.`,
     });
   };
