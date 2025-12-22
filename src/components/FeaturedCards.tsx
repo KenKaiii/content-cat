@@ -2,17 +2,12 @@
 
 import { useState, memo } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { toast } from "sonner";
 
 interface FeaturedCard {
   title: string;
   description: string;
   image: string;
-  href: string;
-  badge?: {
-    text: string;
-    color: string;
-  };
 }
 
 const featuredCards: FeaturedCard[] = [
@@ -20,41 +15,35 @@ const featuredCards: FeaturedCard[] = [
     title: "VIDEO ADS",
     description: "Create scroll-stopping video ads that convert",
     image: "/images/video-ads.jpg",
-    href: "/video-ads",
   },
   {
     title: "HORROR SHORTS",
     description: "Terrifying short-form content that keeps viewers hooked",
     image: "/images/horror-shorts.jpg",
-    href: "/horror-shorts",
   },
   {
     title: "EDUCATIONAL",
     description: "Engaging explainers and tutorials that teach",
     image: "/images/educational.jpg",
-    href: "/educational",
   },
   {
     title: "FUNNY SHORTS",
     description: "Comedy content that gets shares and laughs",
     image: "/images/funny-shorts.jpg",
-    href: "/funny-shorts",
   },
   {
     title: "VIRAL SHORTS",
     description: "Trending formats optimized for maximum reach",
     image: "/images/viral-shorts.jpg",
-    href: "/viral-shorts",
   },
   {
     title: "PERSONAL BRANDING",
     description: "Build your online presence with professional content",
     image: "/images/personal-branding.jpg",
-    href: "/personal-branding",
   },
 ];
 
-const FeaturedCard = memo(function FeaturedCard({
+const FeaturedCardItem = memo(function FeaturedCardItem({
   card,
   priority = false,
 }: {
@@ -63,8 +52,17 @@ const FeaturedCard = memo(function FeaturedCard({
 }) {
   const [isLoaded, setIsLoaded] = useState(false);
 
+  const handleClick = () => {
+    toast.info("Coming soon", {
+      description: `${card.title} will be available in a future update.`,
+    });
+  };
+
   return (
-    <Link href={card.href} className="group w-[38%] flex-shrink-0">
+    <button
+      onClick={handleClick}
+      className="group w-[38%] flex-shrink-0 text-left"
+    >
       <div className="relative aspect-[16/9] overflow-hidden rounded-2xl bg-black/30 backdrop-blur-md">
         {/* Skeleton */}
         <div
@@ -95,7 +93,7 @@ const FeaturedCard = memo(function FeaturedCard({
         </h4>
         <p className="text-xs text-zinc-300">{card.description}</p>
       </div>
-    </Link>
+    </button>
   );
 });
 
@@ -104,7 +102,11 @@ export default function FeaturedCards() {
     <section>
       <div className="hide-scrollbar flex gap-4 overflow-x-auto pb-2">
         {featuredCards.map((card, index) => (
-          <FeaturedCard key={card.title} card={card} priority={index < 3} />
+          <FeaturedCardItem
+            key={card.title}
+            card={card}
+            priority={index < 3}
+          />
         ))}
       </div>
     </section>
