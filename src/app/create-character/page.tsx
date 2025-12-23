@@ -3,7 +3,7 @@ import EntityManagementPage from "@/components/EntityManagementPage";
 const previewImages = [
   {
     id: 1,
-    image: "/images/character-1.jpg",
+    image: "/images/references/char-portrait-1.jpg",
     rotation: "-rotate-12",
     size: "h-40 w-32",
     z: "z-10",
@@ -11,7 +11,7 @@ const previewImages = [
   },
   {
     id: 2,
-    image: "/images/character-2.jpg",
+    image: "/images/references/char-portrait-2.jpg",
     rotation: "rotate-3",
     size: "h-52 w-40",
     z: "z-20",
@@ -19,7 +19,7 @@ const previewImages = [
   },
   {
     id: 3,
-    image: "/images/character-3.jpg",
+    image: "/images/references/char-portrait-3.jpg",
     rotation: "-rotate-6",
     size: "h-44 w-34",
     z: "z-30",
@@ -27,7 +27,7 @@ const previewImages = [
   },
   {
     id: 4,
-    image: "/images/character-4.jpg",
+    image: "/images/references/char-portrait-4.jpg",
     rotation: "rotate-10",
     size: "h-48 w-36",
     z: "z-20",
@@ -36,11 +36,11 @@ const previewImages = [
 ];
 
 const galleryImages = [
-  { id: 1, image: "/images/gallery-1.jpg" },
-  { id: 2, image: "/images/gallery-2.jpg" },
-  { id: 3, image: "/images/gallery-3.jpg" },
-  { id: 4, image: "/images/gallery-4.jpg" },
-  { id: 5, image: "/images/gallery-5.jpg" },
+  { id: 1, image: "/images/references/char-portrait-1.jpg" },
+  { id: 2, image: "/images/references/char-portrait-2.jpg" },
+  { id: 3, image: "/images/references/char-portrait-3.jpg" },
+  { id: 4, image: "/images/references/char-portrait-4.jpg" },
+  { id: 5, image: "/images/references/char-portrait-5.jpg" },
 ];
 
 export default function CreateCharacter() {

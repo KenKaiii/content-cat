@@ -8,29 +8,73 @@ interface UploadModalProps {
   isOpen: boolean;
   onClose: () => void;
   onFilesSelected?: (files: File[]) => void;
+  entityType?: "character" | "product";
 }
 
-const goodPhotos = [
-  { id: 1, image: "/images/good-1.jpg" },
-  { id: 2, image: "/images/good-2.jpg" },
-  { id: 3, image: "/images/good-3.jpg" },
-  { id: 4, image: "/images/good-4.jpg" },
-  { id: 5, image: "/images/good-5.jpg" },
+// Character reference photos - portraits with clear faces
+const characterGoodPhotos = [
+  { id: 1, image: "/images/references/char-good-1.jpg" },
+  { id: 2, image: "/images/references/char-good-2.jpg" },
+  { id: 3, image: "/images/references/char-good-3.jpg" },
+  { id: 4, image: "/images/references/char-good-4.jpg" },
+  { id: 5, image: "/images/references/char-good-5.jpg" },
 ];
 
-const badPhotos = [
-  { id: 1, image: "/images/bad-1.jpg" },
-  { id: 2, image: "/images/bad-2.jpg" },
-  { id: 3, image: "/images/bad-3.jpg" },
-  { id: 4, image: "/images/bad-4.jpg" },
-  { id: 5, image: "/images/bad-5.jpg" },
+const characterBadPhotos = [
+  { id: 1, image: "/images/references/char-bad-1.jpg" },
+  { id: 2, image: "/images/references/char-bad-2.jpg" },
+  { id: 3, image: "/images/references/char-bad-3.jpg" },
+  { id: 4, image: "/images/references/char-bad-4.jpg" },
+  { id: 5, image: "/images/references/char-bad-5.jpg" },
+];
+
+// Product reference photos - clean product shots
+const productGoodPhotos = [
+  { id: 1, image: "/images/references/prod-good-1.jpg" },
+  { id: 2, image: "/images/references/prod-good-2.jpg" },
+  { id: 3, image: "/images/references/prod-good-3.jpg" },
+  { id: 4, image: "/images/references/prod-good-4.jpg" },
+  { id: 5, image: "/images/references/prod-good-5.jpg" },
+];
+
+const productBadPhotos = [
+  { id: 1, image: "/images/references/prod-bad-1.jpg" },
+  { id: 2, image: "/images/references/prod-bad-2.jpg" },
+  { id: 3, image: "/images/references/prod-bad-3.jpg" },
+  { id: 4, image: "/images/references/prod-bad-4.jpg" },
+  { id: 5, image: "/images/references/prod-bad-5.jpg" },
 ];
 
 export default function UploadModal({
   isOpen,
   onClose,
   onFilesSelected,
+  entityType = "character",
 }: UploadModalProps) {
+  // Select appropriate photos based on entity type
+  const goodPhotos =
+    entityType === "product" ? productGoodPhotos : characterGoodPhotos;
+  const badPhotos =
+    entityType === "product" ? productBadPhotos : characterBadPhotos;
+
+  // Different guidance text based on entity type
+  const goodTitle =
+    entityType === "product"
+      ? "Upload clear product photos"
+      : "Upload 6-8 photos for best results";
+  const goodDescription =
+    entityType === "product"
+      ? "Use clean backgrounds, good lighting, and show different angles of your product"
+      : "Upload high-quality images. Show different angles, clear facial expressions, and good lighting";
+  const badTitle =
+    entityType === "product"
+      ? "Avoid These Types of Photos"
+      : "Avoid These Types of Photos";
+  const badDescription =
+    entityType === "product"
+      ? "No blurry images, cluttered backgrounds, multiple products, or poor lighting"
+      : "No duplicates, group shots, pets, nudes, filters, face-covering accessories, or masks";
+
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -72,12 +116,9 @@ export default function UploadModal({
             </div>
             <div className="grid grid-flow-row auto-rows-min">
               <p className="font-heading text-sm font-bold text-white uppercase">
-                Upload 6-8 photos for best results
+                {goodTitle}
               </p>
-              <p className="text-sm text-zinc-300">
-                Upload high-quality images. Show different angles, clear facial
-                expressions, and good lighting
-              </p>
+              <p className="text-sm text-zinc-300">{goodDescription}</p>
             </div>
           </div>
           <div className="grid auto-cols-min grid-flow-col gap-2 overflow-x-auto px-4 md:grid-cols-5">
@@ -110,12 +151,9 @@ export default function UploadModal({
             </div>
             <div className="grid grid-flow-row auto-rows-min">
               <p className="font-heading text-sm font-bold text-white uppercase">
-                Avoid These Types of Photos
+                {badTitle}
               </p>
-              <p className="text-sm text-zinc-300">
-                No duplicates, group shots, pets, nudes, filters, face-covering
-                accessories, or masks
-              </p>
+              <p className="text-sm text-zinc-300">{badDescription}</p>
             </div>
           </div>
           <div className="grid auto-cols-min grid-flow-col gap-2 overflow-x-auto px-4 md:grid-cols-5">

@@ -125,6 +125,7 @@ export default function EntityManagementPage({
         isOpen={isUploadModalOpen}
         onClose={() => setIsUploadModalOpen(false)}
         onFilesSelected={handleFilesSelected}
+        entityType={entityType}
       />
       <UploadReviewModal
         isOpen={isReviewModalOpen}
