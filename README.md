@@ -2,6 +2,9 @@
 
 AI-powered image and video generation platform with a visual workflow builder by Ken Kai.
 
+> [!TIP]
+> **Want to build your own apps with AI?** A free 7-day build challenge and 20+ step-by-step projects are in my free community: **[skool.com/raid](https://www.skool.com/raid)**
+
 ## Features
 
 **Generation**
